@@ -5,9 +5,9 @@ from math import *
 import math
 import sys
 
-screenMulti = 1.6
-screenX = int(800*screenMulti)
-screenY = int(800*screenMulti)
+screenMulti = 1
+screenX = int(1200*screenMulti)
+screenY = int(1200*screenMulti)
 playerX = screenX/2+0.5
 playerY = screenY/2+0.5
 diagonal=int(sqrt(screenX**2+screenY**2))
@@ -20,45 +20,46 @@ pi=(math.pi // precision) * precision
 playerAngle = 0
 angleRegard = pi/4
 pi2=pi*2
-nbRay = screenY
+nbRay = 1200
 dist3D = 0
 listeRay = []
 listeRond = []
-Carte = ("111111111111"
-         "100200000001"
-         "101000020001"
-         "111100001111"
-         "100020020001"
-         "100000011111"
-         "111100010001"
-         "100020020011"
-         "101111002001"
-         "100001021021"
-         "100001001001"
-         "111111111111")
+         #0;2;4;6;8;10
+Carte = ("111111111111"#0
+         "100200000001"#1
+         "101000020001"#2
+         "111100001111"#3
+         "100020020001"#4
+         "100000011111"#5
+         "111100010001"#6
+         "100020020011"#7
+         "101111002001"#8
+         "100001021021"#9
+         "100001001001"#10
+         "111111111111")#11
+         #;1;3;5;7;9;11
 sizeMmap=20
 minimap = sizeMmap*carteSize[0]
 darkGrey = (120, 120, 120)
 Grey = (80, 80, 80)
 mapPlayerX = playerX * minimap / screenX
 mapPlayerY = playerY * minimap / screenY
-vitesse=8
+vitesse=12
 afficherMap=False
 process = 0
-listeObjet = []
+listeObjet = [(1, 350, 150), (1, 450, 450), (1, 450, 750), (1, 750, 250), (1, 750, 450), (1, 750, 750), (1, 750, 950), (1, 1050, 950)]
+objet2d=[]
 def rays(murBrique):
-    global listeRay, listeRond, listeObjet
+    global listeRay, listeRond
     listeRay, listeRond = [], []
     diffRay = (angleRegard*2 / nbRay) // precision * precision
     angleRay = (playerAngle-angleRegard) // precision * precision
-    objCarre=[]
-    listeObjet=[]
     for i in range(nbRay):
         distanceRay=0
         angleRay=(angleRay +diffRay) // precision * precision
         posRayX=playerX
         posRayY=playerY
-        pente = tan(angleRay) // precision * -precision
+        pente = -tan(angleRay) // precision * precision
         diffPiSur2 = angleRay % (pi / 2)
         cosAngle = cos(angleRay) // precision * precision
         sinAngle = sin(angleRay) // precision * precision
@@ -77,16 +78,18 @@ def rays(murBrique):
             if Carte[carre] == "1":
                 listeRay.append((posRayX * minimap / screenX, posRayY * minimap / screenY))
                 rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique)
+                SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)
                 break
-            if Carte[carre] == "2":
+            """if Carte[carre] == "2":
                 if (carre in objCarre) == False:
                     listeObjet.append((i,distanceRay))
-                    objCarre.append(carre)
+                    objCarre.append(carre)"""
+
 def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur):
-    global process
+    global process, objet2d
     debut=time.time()
     nb = nb * math.cos(playerAngle - rayAngle)
-    RectLong = 1200/nb *50*(screenMulti**2)
+    RectLong = 1200/nb *100*(screenMulti**2)
 
     RectLarg = screenX*2/nbRay
     RectY = (screenY-RectLong)/2
@@ -176,8 +179,8 @@ def car_affine(pente,cosAngle,sinAngle,diffPiSur2,posX, posY):
     else:
         return test2, posXtest2, posYtest2,2
 
-def objet(listeObjet):
-    for element in listeObjet:
+def SaveObjet(ray, penteRay, distanceMur, cosAngle, sinAngle):
+    """for element in listeObjet:
         ray = element[0]
         distanceRay = element[1]
         RectLarg = screenX / nbRay
@@ -186,8 +189,36 @@ def objet(listeObjet):
         imgY = tauneau.get_height()
         #print(distanceRay,reduction)
         imageTauneau = pygame.transform.scale(tauneau,(reduction, reduction))
-        screen.blit(imageTauneau,(RectLarg*ray,screenY/2))
-def draw2D(sizeX,sizeY):
+        screen.blit(imageTauneau,(RectLarg*ray,screenY/2))"""
+    for element in listeObjet :
+        x = element[1]-playerX
+        Y=x * penteRay
+        testY=x*penteRay+playerY
+        posObj=[element[1]-cosAngle*-10,element[2]-sinAngle*-10,element[1]+cosAngle*-10,element[2]+sinAngle*-10]
+        penteObj=(posObj[2]-posObj[0])/(posObj[3]-posObj[1])
+        departFObj = posObj[1] - penteObj * posObj[0]
+        departFRay = playerY - penteRay * playerX
+        IntersectionX = (departFRay - departFObj)/ (penteObj - penteRay)
+        IntersectionY = penteRay*IntersectionX + departFRay
+        if posObj[0]< posObj[2] :
+            entrelesPoint = posObj[0] < IntersectionX < posObj[2]
+        else :
+            entrelesPoint = posObj[2] < IntersectionX < posObj[0]
+        diffX = playerX - IntersectionX
+        diffY = playerY - IntersectionY
+        distanceObj = sqrt(diffX**2+diffY**2)
+        if distanceObj<distanceMur and entrelesPoint :
+            #x=x+playerX
+            #print(playerX, playerY, x, testY, penteRay, playerAngle)
+            #RectLarg = screenX*2 / nbRay
+            #reduction = 1200 / distanceObj * 30 * (screenMulti ** 2)
+            #imgX = tauneau.get_width()
+            #imgY = tauneau.get_height()
+            print(distanceObj)
+            #imageTauneau = pygame.transform.scale(tauneau, (reduction, reduction))
+            #objet2d.append((imageTauneau, (RectLarg * ray, screenY / 2)))
+            listeRond.append((IntersectionX * minimap / screenX, IntersectionY * minimap / screenY))
+def drawMap2D(sizeX,sizeY):
     pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0, 0, sizeX *carteSize[1], sizeY * carteSize[0]))
     for y in range(carteSize[0]):
         for x in range(carteSize[1]):
@@ -196,12 +227,19 @@ def draw2D(sizeX,sizeY):
             rectY = y * sizeY
             if Carte[rect] == '1':
                 pygame.draw.rect(screen, Grey, pygame.Rect(rectX, rectY, sizeX-1, sizeY-1))
+            elif Carte[rect] == '2':
+                pygame.draw.rect(screen, (0,0,255), pygame.Rect(rectX, rectY, sizeX - 1, sizeY - 1))
             else:
                 pygame.draw.rect(screen, darkGrey, pygame.Rect(rectX, rectY, sizeX-1, sizeY-1))
     for x in range(nbRay-1):
         pygame.draw.line(screen, (255, 1, 0), (mapPlayerX, mapPlayerY),listeRay[x], 1)
     for rond in listeRond:
         pygame.draw.circle(screen, (0, 255, 0), rond, 2)
+        #pygame.draw.line(screen, (255, 0, 255), rond, (rond[0]+cos(playerAngle+pi/2)*10,rond[1]+sin(playerAngle+pi/2)*10), 1)
+        #pygame.draw.line(screen, (0, 255, 255), rond, (rond[0] - cos(playerAngle+pi/2) * 10, rond[1] - sin(playerAngle+pi/2) * 10), 1)
+def drawObjet2d(listeObjet):
+    for objet in listeObjet:
+            screen.blit(objet[0],objet[1])
 def player(size):
 
 
@@ -212,14 +250,16 @@ def player(size):
 
 
 def f_all(murBrique):
-    global process
+    global process, objet2d
     debut=time.time()
     pygame.draw.rect(screen, Grey, (0, 0, screenX*2, screenY / 2))
     pygame.draw.rect(screen, darkGrey, (0, screenY / 2, screenX*2, screenY / 2))
     rays(murBrique)
     #objet(listeObjet)
+    #drawObjet2d(objet2d)
+    objet2d=[]
     if afficherMap:
-        draw2D(sizeMmap,sizeMmap)
+        drawMap2D(sizeMmap,sizeMmap)
         player(sizeMmap)
     process = time.time() - debut
     textAngle = font.render(str(int(1/process)), True,(0,0,0))
