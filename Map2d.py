@@ -4,6 +4,8 @@ import math
 
 def drawMap2D(sizeX,sizeY):
     pygame.draw.rect(glb.screen, (0, 0, 0), pygame.Rect(0, 0, sizeX *glb.carteSize[1], sizeY * glb.carteSize[0]))
+    glb.mapPlayerX = glb.playerX * glb.minimap / glb.screenX
+    glb.mapPlayerY = glb.playerY * glb.minimap / glb.screenY
     for y in range(glb.carteSize[0]):
         for x in range(glb.carteSize[1]):
             rect = y*glb.carteSize[0]+x
@@ -21,11 +23,7 @@ def drawMap2D(sizeX,sizeY):
         pygame.draw.circle(glb.screen, (0, 255, 0), rond, 2)
         #pygame.draw.line(glb.screen, (255, 0, 255), rond, (rond[0]+cos(glb.playerAngle+pi/2)*10,rond[1]+sin(glb.playerAngle+pi/2)*10), 1)
         #pygame.draw.line(glb.screen, (0, 255, 255), rond, (rond[0] - cos(glb.playerAngle+pi/2) * 10, rond[1] - sin(glb.playerAngle+pi/2) * 10), 1)
-
-def player(size):
-
-
     pygame.draw.circle(glb.screen, (255, 0, 0), (int(glb.mapPlayerX), int(glb.mapPlayerY)), 2)
-    pygame.draw.line(glb.screen, (0, 0, 255), (glb.mapPlayerX, glb.mapPlayerY), (glb.mapPlayerX - math.cos(glb.playerAngle) * 10, glb.mapPlayerY - math.sin(glb.playerAngle) * 10), 1)
-    pygame.draw.line(glb.screen, (0, 255, 255), (glb.mapPlayerX, glb.mapPlayerY), (glb.mapPlayerX - math.cos(glb.playerAngle - glb.angleRegard) * 10, glb.mapPlayerY - math.sin(glb.playerAngle - glb.angleRegard) * 10), 1)
-    pygame.draw.line(glb.screen, (0, 0, 255), (glb.mapPlayerX, glb.mapPlayerY), (glb.mapPlayerX - math.cos(glb.playerAngle + glb.angleRegard) * 10, glb.mapPlayerY - math.sin(glb.playerAngle + glb.angleRegard) * 10), 1)
+    pygame.draw.line(glb.screen, (0, 0, 255), (glb.mapPlayerX, glb.mapPlayerY),(glb.mapPlayerX - math.cos(glb.playerAngle) * 10, glb.mapPlayerY - math.sin(glb.playerAngle) * 10),1)
+    pygame.draw.line(glb.screen, (0, 255, 255), (glb.mapPlayerX, glb.mapPlayerY), (glb.mapPlayerX - math.cos(glb.playerAngle - glb.angleRegard) * 10,glb.mapPlayerY - math.sin(glb.playerAngle - glb.angleRegard) * 10), 1)
+    pygame.draw.line(glb.screen, (0, 0, 255), (glb.mapPlayerX, glb.mapPlayerY), (glb.mapPlayerX - math.cos(glb.playerAngle + glb.angleRegard) * 10,glb.mapPlayerY - math.sin(glb.playerAngle + glb.angleRegard) * 10), 1)
