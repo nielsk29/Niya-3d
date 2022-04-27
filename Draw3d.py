@@ -5,7 +5,7 @@ import math
 
 
 def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur):  # fonction qui dessine un rectangle correspondant à un rayon
-
+    debut = time.time()
     nb = nb * math.cos(glb.playerAngle - rayAngle)  # enlève le "fish eye" en prenant la longueur du côté adjacent au personage en formant un triangle rectangle avec le rayon en hypoténuse
     RectLong = 1200/nb *100*(glb.screenMulti**2)  # calcul trouver par tâtonnement pour transformer la distance du rayon en longueur du rectangle
     RectLarg = glb.screenX*2/glb.nbRay  # calcul de la largeur d'un rectangle
@@ -21,7 +21,7 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur):  # fonction qui dessine u
 
     else:  # si on a touché un mur parallel à l'axe Y
         Ximage = int((rayX % glb.rectSizeX)*imageSizeX/glb.rectSizeX)  # calcul de quel endroit on doit prendre dans l'image pour afficher les texture en fonction de quel endroit X sur le mur le rayon touche
-    debut = time.time()
+
     if (Ximage+RectLarg)>imageSizeX:  # teste si on arrive trops loin sur l'image donc qu'on veut prendre une partie qui n'existe par sur l'image
         mur = imageMur.subsurface((Ximage, 0, imageSizeX-Ximage, imageSizeY))  # coupe l'image pour avoir que la dernière partie possible de la taille d'un rectangle dans l'image
     else:
@@ -33,4 +33,5 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur):  # fonction qui dessine u
     #pygame.draw.rect(screen,Grey,(600,600,500,500))
     #screen.blit(mur, (600, 600))
     glb.screen.blit(mur, (iray*RectLarg, RectY))  # affiche l'image
+
     #pygame.draw.rect(screen, (coul, coul, coul), (iray*RectLarg, RectY, RectLarg, RectLong))

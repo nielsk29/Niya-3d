@@ -12,6 +12,7 @@ import time
 
 
 def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
+    glb.process2 = 0
     debut=time.time()  # debut du temps pour calculer les fps
     pygame.draw.rect(glb.screen, glb.Grey, (0, 0, glb.screenX*2, glb.screenY / 2)) # créer un rectangle pour le ciel
     pygame.draw.rect(glb.screen, glb.darkGrey, (0, glb.screenY / 2, glb.screenX*2, glb.screenY / 2)) # créer un rectangle pour le sol
@@ -24,10 +25,13 @@ def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
         Map2d.drawMap2D(glb.sizeMmap, glb.sizeMmap)  # utilise la fonction qui créer la MiniMap
     glb.process = time.time() - debut    #fin chronomètre pour savoir le temps que prend une seul image à être affiché
     textFPS = font.render(str(int(1/glb.process)), True,(0,0,0)) # créer l'image du chiffre des fps
-    glb.screen.blit(textFPS,(10,30)) # affiche l'image des FPS
+    temps3d = font.render(str(glb.process2), True, (0, 0, 0))
+    frame = font.render(str(glb.process), True,(0,0,0))
+    glb.screen.blit(textFPS, (10, 30))
+    glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
+    glb.screen.blit(temps3d, (10, 170))
 
-
-murBrique = pygame.image.load("wall_bricks.jpg")  # image des murs
+murBrique = pygame.image.load("wall_bricks4.jpg")  # image des murs
 tauneau = pygame.image.load("tauneau.png")  # image Objet
 
 font = pygame.font.SysFont('freesansbold.ttf', 90)  # Police pour les textes

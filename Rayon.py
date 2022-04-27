@@ -11,6 +11,7 @@ def rays(murBrique):   # fonction qui envoie les rayons
     diffRay = (glb.angleRegard*2 / glb.nbRay) // glb.precision * glb.precision  # calcul de la différence d'angle (en radiant) entre chaque rayon envoyé
     angleRay = (glb.playerAngle-glb.angleRegard) // glb.precision * glb.precision  # calcul de l'angle du 1er rayon
     for i in range(glb.nbRay):  # boucle de chaque rayon
+
         distanceRay=0  # variable qui contient la distance entre le joueur et la position du rayon
         angleRay=(angleRay +diffRay) // glb.precision * glb.precision  # angle (en radiant) à laquelle le rayon va être envoyé
         posRayX=glb.playerX  # initialisation de la position X du rayon à la position du joueur
@@ -20,7 +21,9 @@ def rays(murBrique):   # fonction qui envoie les rayons
         cosAngle = math.cos(angleRay) // glb.precision * glb.precision  # calcul du cosinus de l'angle du rayon
         sinAngle = math.sin(angleRay) // glb.precision * glb.precision  # calcul du sinus de l'angle du rayon
         for nbCar in range(glb.diagCarre):  # boucle qui va envoyé le rayon à la prochaine frontière entre les carrés donc le nombre maximal de cette boucle est le diagonal de la carte
+            debut = time.time()
             distCarre, posRayX, posRayY, cote = car_affine(pente,cosAngle,sinAngle,diffPiSur2, posRayX, posRayY)  # utilisation de la fonction qui va calculer où le rayon va toucher la prochaine frontière entre les carrés
+            glb.process2 += time.time() - debut
             if cote ==False:  # si la pente du rayon est trops grandes, car le rayon forme une droite presque parallèle ou perpendiculaire à l'axe des abscisses
                 pixelparpixel(angleRay,i, murBrique)  # dans ce cas la seule solution est de calculer ce rayon pixel par pixel ce qui prend plus de temps que carreau par carreau
                 break  # stop la boucle, car le rayon a touché un mur
@@ -33,8 +36,10 @@ def rays(murBrique):   # fonction qui envoie les rayons
             glb.listeRond.append((posRayX * glb.minimap / glb.screenX, posRayY * glb.minimap / glb.screenY))  # ajoute un rond à la frontière pour la miniMap
             if glb.Carte[carre] == "1":  # si le rayon touche un mur
                 glb.listeRay.append((posRayX * glb.minimap / glb.screenX, posRayY * glb.minimap / glb.screenY))  # ajoute le rayon pour la miniMap
+                #objet.SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)  # utilise la fonction qui regarde si le rayon à toucher un objet
+
                 Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
-                objet.SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)  # utilise la fonction qui regarde si le rayon à toucher un objet
+
                 break  # stop la boucle, car le rayon a touché un mur
             """if Carte[carre] == "2":
                 if (carre in objCarre) == False:

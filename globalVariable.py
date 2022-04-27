@@ -44,6 +44,7 @@ mapPlayerY = playerY * minimap / screenY  # emplacement Y sur la minimap du joue
 vitesse=12  # vitesse joueur
 afficherMap=False  # boolean true si la minimap est affiché
 process = 0  # temps fps
+process2 = 0
 listeObjet = [(1, 350, 150), (1, 450, 450), (1, 450, 750), (1, 750, 250), (1, 750, 450), (1, 750, 750), (1, 750, 950), (1, 1050, 950)]  # liste emplacement objet sous forme (objet,posX,posY)
 objet2d=[]  # liste des objets qu'on voit
 pygame.init()  # initialisation de pygame
