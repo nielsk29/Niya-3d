@@ -36,7 +36,7 @@ def SaveObjet(ray, penteRay, distanceMur, cosAngle, sinAngle):
             #reduction = 1200 / distanceObj * 30 * (screenMulti ** 2)
             #imgX = tauneau.get_width()
             #imgY = tauneau.get_height()
-            print(distanceObj)
+            #print(distanceObj)
             #imageTauneau = pygame.transform.scale(tauneau, (reduction, reduction))
             #objet2d.append((imageTauneau, (RectLarg * ray, screenY / 2)))
             glb.listeRond.append((IntersectionX * glb.minimap / glb.screenX, IntersectionY * glb.minimap / glb.screenY))

@@ -16,12 +16,13 @@ def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
     pygame.draw.rect(glb.screen, glb.Grey, (0, 0, glb.screenX*2, glb.screenY / 2)) # créer un rectangle pour le ciel
     pygame.draw.rect(glb.screen, glb.darkGrey, (0, glb.screenY / 2, glb.screenX*2, glb.screenY / 2)) # créer un rectangle pour le sol
     Rayon.rays(murBrique)  # utilise la fonction qui envoie les rayons et puis créer les murs
+
     #objet(listeObjet)
     #drawObjet2d(objet2d)
     glb.objet2d=[]
     if glb.afficherMap:  # pour savoir si la MiniMap doit être affiché
         Map2d.drawMap2D(glb.sizeMmap, glb.sizeMmap)  # utilise la fonction qui créer la MiniMap
-    glb.process = time.time() - debut  #fin chronomètre pour savoir le temps que prend une seul image à être affiché
+    glb.process = time.time() - debut    #fin chronomètre pour savoir le temps que prend une seul image à être affiché
     textFPS = font.render(str(int(1/glb.process)), True,(0,0,0)) # créer l'image du chiffre des fps
     glb.screen.blit(textFPS,(10,30)) # affiche l'image des FPS
 

@@ -1,6 +1,6 @@
 
 import globalVariable as glb  # importation des Variables globals
-import test
+import time
 import Draw3d
 import objet
 import math
@@ -40,7 +40,6 @@ def rays(murBrique):   # fonction qui envoie les rayons
                 if (carre in objCarre) == False:
                     listeObjet.append((i,distanceRay))
                     objCarre.append(carre)"""
-
 
 def pixelparpixel(angleRay,i, murBrique):  # fonction pour calculer le rayon pixel par pixel pour quand le rayon est perpendiculaire ou parallèle à l'axe des abscisses
     for nb in range(glb.diagonal):  # boucle qui va calculer le prochain pixel donc pour maximum de répétition le diagonal des pixels
