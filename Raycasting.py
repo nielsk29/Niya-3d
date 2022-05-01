@@ -13,34 +13,33 @@ import time
 
 def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
     glb.process2 = 0
+    glb.process3 = 0
     debut=time.time()  # debut du temps pour calculer les fps
     pygame.draw.rect(glb.screen, glb.Grey, (0, 0, glb.screenX*2, glb.screenY / 2)) # créer un rectangle pour le ciel
     pygame.draw.rect(glb.screen, glb.darkGrey, (0, glb.screenY / 2, glb.screenX*2, glb.screenY / 2)) # créer un rectangle pour le sol
     Rayon.rays(murBrique)  # utilise la fonction qui envoie les rayons et puis créer les murs
 
-    #objet(listeObjet)
-    #drawObjet2d(objet2d)
+    #objet.objet(glb.listeObjet)
+
     glb.objet2d=[]
     if glb.afficherMap:  # pour savoir si la MiniMap doit être affiché
         Map2d.drawMap2D(glb.sizeMmap, glb.sizeMmap)  # utilise la fonction qui créer la MiniMap
     glb.process = time.time() - debut    #fin chronomètre pour savoir le temps que prend une seul image à être affiché
-    textFPS = font.render(str(int(1/glb.process)), True,(0,0,0)) # créer l'image du chiffre des fps
-    temps3d = font.render(str(glb.process2), True, (0, 0, 0))
-    frame = font.render(str(glb.process), True,(0,0,0))
+    textFPS = glb.font.render(str(int(1/glb.process)), True,(0,0,0)) # créer l'image du chiffre des fps
+    temps3d = glb.font.render(str(math.atan(math.tan(glb.playerAngle))), True, (0, 0, 0))
+    frame = glb.font.render(str(glb.process), True,(0,0,0))
+    textpro3 = glb.font.render(str(glb.process3), True,(0,0,0))
     glb.screen.blit(textFPS, (10, 30))
     glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
     glb.screen.blit(temps3d, (10, 170))
+    glb.screen.blit(textpro3, (10, 240))
 
-murBrique = pygame.image.load("wall_bricks4.jpg")  # image des murs
-tauneau = pygame.image.load("tauneau.png")  # image Objet
-
-font = pygame.font.SysFont('freesansbold.ttf', 90)  # Police pour les textes
-temps = pygame.time.Clock()  # Initialisation temps
-f_all(murBrique)  # créer la 1ère image
+f_all(glb.murBrique)  # créer la 1ère image
 while True:  # boucle infinie jusqu'a qu'on quitte le jeu
-    f_all(murBrique)  # création de l'image
+    f_all(glb.murBrique)  # création de l'image
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            print(glb.maxlong)
             pygame.quit()                                # Si on quitte le jeu
             sys.exit()
 
@@ -50,8 +49,8 @@ while True:  # boucle infinie jusqu'a qu'on quitte le jeu
     if keys[pygame.K_q]: # si on appuie sur le q
         glb.playerAngle = (glb.playerAngle-0.1)%glb.pi2 # on réduit l'angle à la quel regarde le joueur et on le fait rester plus petit que 2pi
     if keys[pygame.K_s]: # si on appuie sur le "s"
-        playerCol = int((glb.playerX + math.cos(glb.playerAngle) * glb.vitesse*3) / glb.rectSizeX)  # on regarde la colonne ou va aller le joueur s'il recule
-        playerLigne = int((glb.playerY + math.sin(glb.playerAngle) * glb.vitesse*3) / glb.rectSizeY)  # on regarde la ligne ou va aller le joueur s'il recule
+        playerCol = int((glb.playerX + math.cos(glb.playerAngle) * glb.vitesse*5) / glb.rectSizeX)  # on regarde la colonne ou va aller le joueur s'il recule
+        playerLigne = int((glb.playerY + math.sin(glb.playerAngle) * glb.vitesse*5) / glb.rectSizeY)  # on regarde la ligne ou va aller le joueur s'il recule
         playerCarre = playerLigne * glb.carteSize[0] + playerCol  # grâce à la colonne et la ligne on peut savoir le carré ou il va aller
         if glb.Carte[playerCarre] != "1":  # si le carré où il va aller n'est pas un mur
             # on augmente la position X du joueur du cosinus de son angle (* la vitesse) ou il regarde donc s'il regarde vers la droite le cosinus sera négatif donc le X va baisser
@@ -61,11 +60,14 @@ while True:  # boucle infinie jusqu'a qu'on quitte le jeu
     if keys[pygame.K_z] : # si on appuie sur le "z"
 
         # On fait la même chose sauf qu'au lieu d'augmenter du cosinus ou le sinus on le soustraie le cosinus ou le sinus
-
-        playerCol=int((glb.playerX-math.cos(glb.playerAngle) * glb.vitesse*3)/glb.rectSizeX)
-        playerLigne=int((glb.playerY-math.sin(glb.playerAngle) * glb.vitesse*3)/glb.rectSizeY)
-        playerCarre=playerLigne*glb.carteSize[0] + playerCol
-        if glb.Carte[playerCarre]!="1":
+        signeCos = math.copysign(1,math.cos(glb.playerAngle))
+        signeSin = math.copysign(1, math.sin(glb.playerAngle))
+        playerCol=int((glb.playerX- signeCos * 24)/glb.rectSizeX)
+        playerLigne=int((glb.playerY-signeSin * 24)/glb.rectSizeY)
+        curentLigne = int(glb.playerY/glb.rectSizeY)
+        curentCol = int(glb.playerX / glb.rectSizeX)
+        playerCarre= (playerLigne*glb.carteSize[0] + curentCol,curentLigne*glb.carteSize[0] + playerCol)
+        if glb.Carte[playerCarre[1]]!="1" and glb.Carte[playerCarre[0]]!="1":
             glb.playerX -= math.cos(glb.playerAngle) * glb.vitesse
             glb.playerY -= math.sin(glb.playerAngle) * glb.vitesse
     if keys[pygame.K_TAB]:  # Si la touche "TAB" est pressé
@@ -75,5 +77,5 @@ while True:  # boucle infinie jusqu'a qu'on quitte le jeu
     mapplayerX = glb.playerX * glb.minimap / glb.screenX  # calcul de la position X du joueur dans la MiniMap
     mapplayerY = glb.playerY * glb.minimap / glb.screenY  # calcul de la position Y du joueur dans la MiniMap
     pygame.display.flip()  # mets à jour la fenêtre donc affiche la frame
-
+    glb.temps.tick(30)
 
