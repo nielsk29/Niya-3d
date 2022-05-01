@@ -96,7 +96,7 @@ def car_affine(pente,cosAngle,sinAngle,diffPiSur2,posX, posY,signCos,signSin):  
     else:  # le contraire est que la prochaine frontière qui peut toucher si elle est sur perpendiculaire à l'axe Y est plus grande que la position Y actuelle du rayon
         dizainePosY = posY % glb.rectSizeY  # différence entre la pos Y du rayon et la position Y de la frontière qu'il peut toucher
         posYtest2 = posY - dizainePosY - 0.05  # position Y de la frontière qu'il peut toucher
-    glb.process2 += time.time() - debut
+
 
     fx = dizainePosY / pente   # calcul de l'incrémentation de la position X pour atteindre l'endroit où il va toucher la frontière si elle est perpendiculaire à l'axe Y
     fy = f_affine(dizainePosX)   # calcul l'incrémentation de la position Y pour atteindre l'endroit où il va toucher la frontière si elle est perpendiculaire à l'axe X
@@ -120,7 +120,7 @@ def car_affine(pente,cosAngle,sinAngle,diffPiSur2,posX, posY,signCos,signSin):  
     debut = time.time()
     test1 = abs(dizainePosX / cosAngle) # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe X
     test2 = abs(fx / cosAngle)  # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe Y
-    glb.process3 += time.time() - debut
+
     if test1 < test2:  # on regarde quelle est la plus petite distance entre le deux et ce sera celle-là qu'il aura touché en premier donc la prochaine frontière que le rayon touche
         return test1,posXtest1, posYtest1,1  # on renvoie les valeurs dans le cas ou le rayon touche en premier une frontière perpendiculaire à l'axe X
     else:

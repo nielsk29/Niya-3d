@@ -26,13 +26,13 @@ def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
         Map2d.drawMap2D(glb.sizeMmap, glb.sizeMmap)  # utilise la fonction qui créer la MiniMap
     glb.process = time.time() - debut    #fin chronomètre pour savoir le temps que prend une seul image à être affiché
     textFPS = glb.font.render(str(int(1/glb.process)), True,(0,0,0)) # créer l'image du chiffre des fps
-    temps3d = glb.font.render(str(math.atan(math.tan(glb.playerAngle))), True, (0, 0, 0))
+    temps3d = glb.font.render(str(glb.process2), True, (0, 0, 0))
     frame = glb.font.render(str(glb.process), True,(0,0,0))
     textpro3 = glb.font.render(str(glb.process3), True,(0,0,0))
     glb.screen.blit(textFPS, (10, 30))
-    glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
-    glb.screen.blit(temps3d, (10, 170))
-    glb.screen.blit(textpro3, (10, 240))
+    #glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
+    #glb.screen.blit(temps3d, (10, 170))
+    #glb.screen.blit(textpro3, (10, 240))
 
 f_all(glb.murBrique)  # créer la 1ère image
 while True:  # boucle infinie jusqu'a qu'on quitte le jeu

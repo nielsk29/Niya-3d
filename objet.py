@@ -1,9 +1,12 @@
+import time
+
 import globalVariable as glb
 import math
 
 
 
 def CreerListeAngleOBJ(listeObjet):
+    debut = time.time()
     listeAngleOBJ = []
     minAngle = (glb.playerAngle-glb.angleRegard)%glb.pi2
     maxAngle = (glb.playerAngle+glb.angleRegard)%glb.pi2
@@ -37,6 +40,7 @@ def CreerListeAngleOBJ(listeObjet):
             glb.listeRond.append(pos2)
         nb += 1
     #print(listeAngleOBJ)
+    glb.process3 = time.time() - debut
     return listeAngleOBJ
     #print(listeAngleOBJ)
 def calculAngleObj(diffX,diffY):
@@ -63,6 +67,7 @@ def drawOBJ(i,longRayon,angleRay,listeAngleOBJ, penteRay,posRayX, posRayY):
 
 
 def saveOBJ(element,penteRay,longRayon,angleRay,i) :
+
     penteOBJ = (element[3][1] - element[2][1]) / (element[3][0] - element[2][0])
     departOBJ = element[2][1] - penteOBJ * element[2][0]
     departRay = glb.playerY - penteRay * glb.playerX
@@ -75,22 +80,27 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i) :
     if distanceOBJ < longRayon:
         maxDistance = distanceOBJ
         reduction = 1200 / distanceOBJ * 100 * (glb.screenMulti ** 2)
-        imgX = glb.tauneau.get_width()
-        imgY = glb.tauneau.get_height()
-        posRaySurOBJ = math.ceil(
-            math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /
-            glb.listeParametreObjet[element[4]][0])
+
+
         # Ximage = RectLarg * imgX / reduction
-        rectLargbase = math.ceil(abs(RectLarg * imgX / reduction))
+        #rectLargbase = math.ceil(abs(RectLarg * imgX / reduction))
         posYOBJ = glb.screenY / 2 - reduction / glb.listeParametreObjet[element[4]][1]
-        if rectLargbase + posRaySurOBJ > imgX:
-            imageTauneau = glb.tauneau.subsurface((imgX - rectLargbase, 0, rectLargbase, imgY))
+        if reduction >= glb.lenListeOBJ:
+            reduction = glb.lenListeOBJ-1
+        image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
+        imgX = image.get_width()
+        imgY = image.get_height()
+        posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /glb.listeParametreObjet[element[4]][0])
+        if RectLarg + posRaySurOBJ > imgX:
+            image = image.subsurface((imgX - RectLarg, 0, RectLarg, imgY))
         else:
-            imageTauneau = glb.tauneau.subsurface((posRaySurOBJ, 0, rectLargbase, imgY))
-        imageTauneau = glb.pygame.transform.scale(imageTauneau, (abs(RectLarg), abs(reduction)))
+            image = image.subsurface((posRaySurOBJ, 0, RectLarg, imgY))
+
+        #glb.pygame.transform.scale(image, (abs(RectLarg), abs(reduction)))
         # print(imageTauneau,(posRaySurOBJ, 0,RectLarg , imgY))
 
-        glb.objet2d.append((distanceOBJ, (imageTauneau, (RectLarg * i, posYOBJ))))
+        glb.objet2d.append((distanceOBJ, (image, (RectLarg * i, posYOBJ))))
+
 """def SaveObjet(ray, penteRay, distanceMur, cosAngle, sinAngle):
     for element in listeObjet:
         ray = element[0]
@@ -132,7 +142,8 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i) :
             glb.listeRond.append((IntersectionX * glb.minimap / glb.screenX, IntersectionY * glb.minimap / glb.screenY))
 """
 def drawObjet2d():
+    debut = time.time()
     liste = sorted(glb.objet2d,key=lambda y: y[0], reverse=True)
     for objet in liste:
-            print(objet[0],objet[1])
             glb.screen.blit(objet[1][0],objet[1][1])
+    glb.process2 += time.time() - debut
