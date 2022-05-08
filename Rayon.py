@@ -9,12 +9,12 @@ def rays(murBrique):   # fonction qui envoie les rayons
     glb.listeRay = []  # liste qui contient les positions des rayons pour les afficher dans la MiniMap
     glb.listeRond = []  # liste qui contient les cercles à afficher sur la MiniMap
     diffRay = (glb.angleRegard*2 / glb.nbRay)   # calcul de la différence d'angle (en radiant) entre chaque rayon envoyé
-    angleRay = (glb.playerAngle-glb.angleRegard)   # calcul de l'angle du 1er rayon
+    angleRay = (glb.playerAngle-glb.angleRegard)%glb.pi2   # calcul de l'angle du 1er rayon
     listAngleObj = objet.CreerListeAngleOBJ(glb.listeObjet)
     for i in range(glb.nbRay):  # boucle de chaque rayon
 
         distanceRay=0  # variable qui contient la distance entre le joueur et la position du rayon
-        angleRay=(angleRay +diffRay) # angle (en radiant) à laquelle le rayon va être envoyé
+        angleRay=(angleRay +diffRay)%glb.pi2 # angle (en radiant) à laquelle le rayon va être envoyé
         posRayX=glb.playerX  # initialisation de la position X du rayon à la position du joueur
         posRayY=glb.playerY  # initialisation de la position Y du rayon à la position du joueur
         pente = -math.tan(angleRay) # calcul de la pente du rayon comme une fonction affine
@@ -37,9 +37,9 @@ def rays(murBrique):   # fonction qui envoie les rayons
             lignePosRay = math.floor(posRayY/glb.rectSizeY)  # calcul de la ligne à laquelle se trouve le rayon
             carre=int(lignePosRay*glb.carteSize[0] + colPosRay)  # calcul du carré à laquelle se trouve le rayon grâce à sa colonne et sa ligne
 
-            glb.listeRond.append((posRayX * glb.minimap / glb.screenX, posRayY * glb.minimap / glb.screenY))  # ajoute un rond à la frontière pour la miniMap
+            glb.listeRond.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))  # ajoute un rond à la frontière pour la miniMap
             if glb.Carte[carre] == "1":  # si le rayon touche un mur
-                glb.listeRay.append((posRayX * glb.minimap / glb.screenX, posRayY * glb.minimap / glb.screenY))  # ajoute le rayon pour la miniMap
+                glb.listeRay.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))  # ajoute le rayon pour la miniMap
                 #objet.SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)  # utilise la fonction qui regarde si le rayon à toucher un objet
 
                 Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon

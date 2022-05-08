@@ -4,8 +4,8 @@ import math
 
 def drawMap2D(sizeX,sizeY):
     pygame.draw.rect(glb.screen, (0, 0, 0), pygame.Rect(0, 0, sizeX *glb.carteSize[1], sizeY * glb.carteSize[0]))
-    glb.mapPlayerX = glb.playerX * glb.minimap / glb.screenX
-    glb.mapPlayerY = glb.playerY * glb.minimap / glb.screenY
+    glb.mapPlayerX = glb.playerX * glb.minimap / glb.gameX
+    glb.mapPlayerY = glb.playerY * glb.minimap / glb.gameY
     for y in range(glb.carteSize[0]):
         for x in range(glb.carteSize[1]):
             rect = y*glb.carteSize[0]+x

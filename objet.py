@@ -1,5 +1,7 @@
 import time
 
+import pygame
+
 import globalVariable as glb
 import math
 
@@ -24,27 +26,26 @@ def CreerListeAngleOBJ(listeObjet):
         diffY2 = (element[2] - glb.playerY) - (long/2 * cosAngle)
         angleOBJ1 = calculAngleObj(diffX1, diffY1)
         angleOBJ2 = calculAngleObj(diffX2, diffY2)
-        if minAngle>maxAngle:
-            #if (angleOBJ1>minAngle or angleOBJ1<maxAngle) and (angleOBJ2>minAngle or angleOBJ2<maxAngle):
-            pos1 = ((glb.playerX+diffX1) * glb.minimap / glb.screenX, (glb.playerY + diffY1 ) * glb.minimap / glb.screenY)
-            pos2 = ((glb.playerX+diffX2) * glb.minimap / glb.screenX, (glb.playerY + diffY2) * glb.minimap / glb.screenY)
-            listeAngleOBJ.append((angleOBJ1,angleOBJ2, (glb.playerX + diffX1,glb.playerY + diffY1),(glb.playerX + diffX2,glb.playerY + diffY2),element[0]))
-            glb.listeRond.append(pos1)
-            glb.listeRond.append(pos2)
+        #if (angleOBJ1>minAngle or angleOBJ1<maxAngle) and (angleOBJ2>minAngle or angleOBJ2<maxAngle):
+        pos1 = ((glb.playerX+diffX1) * glb.minimap / glb.gameX, (glb.playerY + diffY1 ) * glb.minimap / glb.gameY)
+        pos2 = ((glb.playerX+diffX2) * glb.minimap / glb.gameX, (glb.playerY + diffY2) * glb.minimap / glb.gameY)
+        if angleOBJ1<angleOBJ2:
+            listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),(glb.playerX + diffX2, glb.playerY + diffY2), element[0]))
         else:
-            #if(angleOBJ1>minAngle and angleOBJ1<maxAngle) and (angleOBJ2>minAngle and angleOBJ2<maxAngle):
-            pos1 = ((glb.playerX + diffX1) * glb.minimap / glb.screenX, (glb.playerY + diffY1) * glb.minimap / glb.screenY)
-            pos2 = ((glb.playerX + diffX2) * glb.minimap / glb.screenX, (glb.playerY + diffY2) * glb.minimap / glb.screenY)
-            listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1,glb.playerY + diffY1),(glb.playerX + diffX2,glb.playerY + diffY2),element[0]))
-            glb.listeRond.append(pos1)
-            glb.listeRond.append(pos2)
+            listeAngleOBJ.append((angleOBJ1,angleOBJ2, (glb.playerX + diffX1,glb.playerY + diffY1),(glb.playerX + diffX2,glb.playerY + diffY2),element[0]))
+        glb.listeRond.append(pos1)
+        glb.listeRond.append(pos2)
         nb += 1
     #print(listeAngleOBJ)
-    glb.process3 = time.time() - debut
     return listeAngleOBJ
     #print(listeAngleOBJ)
 def calculAngleObj(diffX,diffY):
-    if diffX < 0 and diffY > 0:
+    if diffX==0 :
+        if diffY<0:
+            angle = math.pi/2
+        else :
+            angle = glb.pi + math.pi/2
+    elif diffX < 0 and diffY > 0:
         angle = math.atan(diffY / diffX) + glb.pi2
     elif diffX > 0:
         angle = math.atan(diffY / diffX) + glb.pi
@@ -67,19 +68,21 @@ def drawOBJ(i,longRayon,angleRay,listeAngleOBJ, penteRay,posRayX, posRayY):
 
 
 def saveOBJ(element,penteRay,longRayon,angleRay,i) :
-
-    penteOBJ = (element[3][1] - element[2][1]) / (element[3][0] - element[2][0])
+    if element[3][0] == element[2][0] :
+        penteOBJ = (element[3][1] - element[2][1]) / (element[3][0] - element[2][0]+0.01)
+    else:
+        penteOBJ = (element[3][1] - element[2][1]) / (element[3][0] - element[2][0])
     departOBJ = element[2][1] - penteOBJ * element[2][0]
     departRay = glb.playerY - penteRay * glb.playerX
     intersectionX = (departRay - departOBJ) / (penteOBJ - penteRay)
     intersectionY = penteRay * intersectionX + departRay
     # print(penteOBJ,penteRay,departOBJ,departRay,intersectionX,intersectionY)
-    glb.listeRond.append((intersectionX * glb.minimap / glb.screenX, intersectionY * glb.minimap / glb.screenX))
-    RectLarg = glb.screenX * 2 / glb.nbRay
+    glb.listeRond.append((intersectionX * glb.minimap / glb.gameX, intersectionY * glb.minimap / glb.gameX))
     distanceOBJ = abs(abs(intersectionX - glb.playerX) / math.cos(angleRay))
     if distanceOBJ < longRayon:
         maxDistance = distanceOBJ
-        reduction = 1200 / distanceOBJ * 100 * (glb.screenMulti ** 2)
+        distanceOBJ = distanceOBJ * math.cos(glb.playerAngle - angleRay)
+        reduction = 1200 / distanceOBJ * glb.listeParametreObjet[element[4]][2] * (glb.screenMulti ** 2)
 
 
         # Ximage = RectLarg * imgX / reduction
@@ -91,15 +94,21 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i) :
         imgX = image.get_width()
         imgY = image.get_height()
         posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /glb.listeParametreObjet[element[4]][0])
-        if RectLarg + posRaySurOBJ > imgX:
-            image = image.subsurface((imgX - RectLarg, 0, RectLarg, imgY))
+        if (glb.screenX-glb.RectLarg)<(glb.RectLarg * i)<(glb.screenX+glb.RectLarg) and glb.shoot and element[4]==0 :
+            glb.newSangLong = (reduction, (reduction)* (glb.sangLongY/glb.sangLongX))
+            glb.posSang = (glb.screenX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
+            glb.shoot = False
+            glb.toucher = True
+            pygame.mixer.Sound.play(glb.hitDemonSound)
+        if glb.RectLarg + posRaySurOBJ > imgX:
+            image = image.subsurface((imgX - glb.RectLarg, 0, glb.RectLarg, imgY))
         else:
-            image = image.subsurface((posRaySurOBJ, 0, RectLarg, imgY))
+            image = image.subsurface((posRaySurOBJ, 0, glb.RectLarg, imgY))
 
         #glb.pygame.transform.scale(image, (abs(RectLarg), abs(reduction)))
         # print(imageTauneau,(posRaySurOBJ, 0,RectLarg , imgY))
 
-        glb.objet2d.append((distanceOBJ, (image, (RectLarg * i, posYOBJ))))
+        glb.objet2d.append((distanceOBJ, (image, (glb.RectLarg * i, posYOBJ))))
 
 """def SaveObjet(ray, penteRay, distanceMur, cosAngle, sinAngle):
     for element in listeObjet:
@@ -146,4 +155,4 @@ def drawObjet2d():
     liste = sorted(glb.objet2d,key=lambda y: y[0], reverse=True)
     for objet in liste:
             glb.screen.blit(objet[1][0],objet[1][1])
-    glb.process2 += time.time() - debut
+
