@@ -8,14 +8,13 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur):  # fonction qui dessine u
     debut = time.time()
     nb = nb * math.cos(glb.playerAngle - rayAngle)  # enlève le "fish eye" en prenant la longueur du côté adjacent au personage en formant un triangle rectangle avec le rayon en hypoténuse
     if nb!=0:
-        RectLong = 1200/nb *110*(glb.screenMulti**2)  # calcul trouver par tâtonnement pour transformer la distance du rayon en longueur du rectangle
+        RectLong = 1200/nb *110 * glb.reductionEcran  # calcul trouver par tâtonnement pour transformer la distance du rayon en longueur du rectangle
     else:
-        RectLong = glb.screenX*4-1
+        RectLong = glb.lenListe-1
     if RectLong>glb.maxlong:
         glb.maxlong=RectLong
-    if RectLong>=glb.screenX*4:
-        RectLong=glb.screenX*4-1
-
+    if RectLong>=glb.lenListe:
+        RectLong=glb.lenListe-1
     mur = glb.listeImage[math.floor(RectLong)]
     imageSizeX = mur.get_width() - 1  # taille X de l'image de base
     imageSizeY = mur.get_height() - 1  # taille Y de l'image de base

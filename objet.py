@@ -56,18 +56,19 @@ def calculAngleObj(diffX,diffY):
 
 def drawOBJ(i,longRayon,angleRay,listeAngleOBJ, penteRay,posRayX, posRayY):
     penteRay = -penteRay
+    nb=0
     for element in listeAngleOBJ:
         angleMin = element[0]
         angleMax = element[1]
         if angleMin > angleMax:
             if angleRay > angleMin or angleRay < angleMax:
-                saveOBJ(element, penteRay, longRayon, angleRay,i)
+                saveOBJ(element, penteRay, longRayon, angleRay,i,nb)
         else :
             if angleRay > angleMin and angleRay < angleMax:
-                saveOBJ(element, penteRay, longRayon, angleRay,i)
+                saveOBJ(element, penteRay, longRayon, angleRay,i,nb)
+        nb+=1
 
-
-def saveOBJ(element,penteRay,longRayon,angleRay,i) :
+def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
     if element[3][0] == element[2][0] :
         penteOBJ = (element[3][1] - element[2][1]) / (element[3][0] - element[2][0]+0.01)
     else:
@@ -82,30 +83,35 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i) :
     if distanceOBJ < longRayon:
         maxDistance = distanceOBJ
         distanceOBJ = distanceOBJ * math.cos(glb.playerAngle - angleRay)
-        reduction = 1200 / distanceOBJ * glb.listeParametreObjet[element[4]][2] * (glb.screenMulti ** 2)
+        reduction = 1200 / distanceOBJ * glb.listeParametreObjet[element[4]][2] * glb.reductionEcran
 
 
         # Ximage = RectLarg * imgX / reduction
-        #rectLargbase = math.ceil(abs(RectLarg * imgX / reduction))
+
         posYOBJ = glb.screenY / 2 - reduction / glb.listeParametreObjet[element[4]][1]
-        if reduction >= glb.lenListeOBJ:
-            reduction = glb.lenListeOBJ-1
-        image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
+        if reduction >= glb.screenY*2:
+            reduction = glb.screenY*2
+            distanceOBJ = 5
+        #image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
+        image = glb.listeImageOBJ[element[4]][math.floor(glb.listeObjet[nb][3])]
         imgX = image.get_width()
         imgY = image.get_height()
+        rectLargbase = math.ceil(abs(glb.RectLarg * imgX / reduction))
         posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /glb.listeParametreObjet[element[4]][0])
-        if (glb.screenX-glb.RectLarg)<(glb.RectLarg * i)<(glb.screenX+glb.RectLarg) and glb.shoot and element[4]==0 :
-            glb.newSangLong = (reduction, (reduction)* (glb.sangLongY/glb.sangLongX))
-            glb.posSang = (glb.screenX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
-            glb.shoot = False
+        if (glb.millieuX-glb.RectLarg)<(glb.RectLarg * i)<(glb.millieuX+glb.RectLarg) and glb.shoot and element[4]==0 and glb.vieObjet[nb]>0:
+            glb.newSangLong = (int(reduction*2), int((reduction*2)* (glb.sangLongY/glb.sangLongX)))
+            glb.posSang = (glb.millieuX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
             glb.toucher = True
             pygame.mixer.Sound.play(glb.hitDemonSound)
-        if glb.RectLarg + posRaySurOBJ > imgX:
-            image = image.subsurface((imgX - glb.RectLarg, 0, glb.RectLarg, imgY))
-        else:
-            image = image.subsurface((posRaySurOBJ, 0, glb.RectLarg, imgY))
+            glb.vieObjet[nb] -= 10
+            if glb.vieObjet[nb]<=0:
+                glb.lObjAnim.append(nb)
 
-        #glb.pygame.transform.scale(image, (abs(RectLarg), abs(reduction)))
+        if rectLargbase + posRaySurOBJ > imgX:
+            image = image.subsurface((imgX - rectLargbase, 0, rectLargbase, imgY))
+        else:
+            image = image.subsurface((posRaySurOBJ, 0, rectLargbase, imgY))
+        image = glb.pygame.transform.scale(image, (abs(glb.RectLarg), abs(reduction)))
         # print(imageTauneau,(posRaySurOBJ, 0,RectLarg , imgY))
 
         glb.objet2d.append((distanceOBJ, (image, (glb.RectLarg * i, posYOBJ))))

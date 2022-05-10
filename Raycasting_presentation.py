@@ -18,7 +18,7 @@ pi=(math.pi // precision) * precision
 playerAngle = 0
 angleRegard = pi/6
 pi2=pi*2
-nbRay = 1200
+nbRay = 30
 dist3D = 0
 
 Carte = ("111111111111"
@@ -211,7 +211,7 @@ while True:
         if Carte[playerCarre]!="1":
             playerX -= math.cos(playerAngle) * 8
             playerY -= math.sin(playerAngle) * 8
-
-    pygame.display.flip()
     temps.tick(30)
+    pygame.display.flip()
+
 
