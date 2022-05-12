@@ -30,11 +30,40 @@ def CreerListeAngleOBJ(listeObjet):
         pos1 = ((glb.playerX+diffX1) * glb.minimap / glb.gameX, (glb.playerY + diffY1 ) * glb.minimap / glb.gameY)
         pos2 = ((glb.playerX+diffX2) * glb.minimap / glb.gameX, (glb.playerY + diffY2) * glb.minimap / glb.gameY)
         if angleOBJ1<angleOBJ2:
-            listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),(glb.playerX + diffX2, glb.playerY + diffY2), element[0]))
+            listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),(glb.playerX + diffX2, glb.playerY + diffY2), element[0],element[3]))
         else:
-            listeAngleOBJ.append((angleOBJ1,angleOBJ2, (glb.playerX + diffX1,glb.playerY + diffY1),(glb.playerX + diffX2,glb.playerY + diffY2),element[0]))
+            listeAngleOBJ.append((angleOBJ1,angleOBJ2, (glb.playerX + diffX1,glb.playerY + diffY1),(glb.playerX + diffX2,glb.playerY + diffY2),element[0],element[3]))
         glb.listeRond.append(pos1)
         glb.listeRond.append(pos2)
+        nb += 1
+    nb=0
+    for element in glb.Carte :
+        if element=="2" :
+            long = 100
+            posX = (nb%glb.carteSize[0])*glb.rectSizeX + glb.rectSizeX/2 + glb.statusPorte[nb][0]
+            posY = (nb // glb.carteSize[1]) * glb.rectSizeY + glb.rectSizeY / 2
+            diffX = posX - glb.playerX
+            diffY = posY - glb.playerY
+            angleOBJ = calculAngleObj(diffX, diffY)
+            cosAngle = math.copysign(1,math.cos(angleOBJ))
+            sinAngle = math.copysign(1,math.sin(angleOBJ))
+            diffX1 = (posX - glb.playerX) - (long / 2 *sinAngle)
+            diffX2 = (posX - glb.playerX) + (long / 2 *sinAngle)
+            diffY1 = (posY - glb.playerY)
+            diffY2 = (posY - glb.playerY)
+            angleOBJ1 = calculAngleObj(diffX1, diffY1)
+            angleOBJ2 = calculAngleObj(diffX2, diffY2)
+            # if (angleOBJ1>minAngle or angleOBJ1<maxAngle) and (angleOBJ2>minAngle or angleOBJ2<maxAngle):
+            pos1 = ((glb.playerX + diffX1) * glb.minimap / glb.gameX, (glb.playerY + diffY1) * glb.minimap / glb.gameY)
+            pos2 = ((glb.playerX + diffX2) * glb.minimap / glb.gameX, (glb.playerY + diffY2) * glb.minimap / glb.gameY)
+            if diffY>0:
+                listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),
+                                      (glb.playerX + diffX2, glb.playerY + diffY2), 2,0))
+            else:
+                listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),
+                                      (glb.playerX + diffX2, glb.playerY + diffY2), 3,0))
+            glb.listeRond.append(pos1)
+            glb.listeRond.append(pos2)
         nb += 1
     #print(listeAngleOBJ)
     return listeAngleOBJ
@@ -93,7 +122,7 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
             reduction = glb.screenY*2
             distanceOBJ = 5
         #image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
-        image = glb.listeImageOBJ[element[4]][math.floor(glb.listeObjet[nb][3])]
+        image = glb.listeImageOBJ[element[4]][math.floor(element[5])]
         imgX = image.get_width()
         imgY = image.get_height()
         rectLargbase = math.ceil(abs(glb.RectLarg * imgX / reduction))

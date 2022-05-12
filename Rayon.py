@@ -43,7 +43,7 @@ def rays(murBrique):   # fonction qui envoie les rayons
                 glb.listeRay.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))  # ajoute le rayon pour la miniMap
                 #objet.SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)  # utilise la fonction qui regarde si le rayon à toucher un objet
                 pente2 = pente
-                Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
+                Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
                 objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
                 break  # stop la boucle, car le rayon a touché un mur
             """if Carte[carre] == "2":
@@ -68,7 +68,7 @@ def pixelparpixel(angleRay,i, murBrique,pente,listAngleObj,distanceRay):  # fonc
             else:  # sinon ça veut dire qu'on a touché un mur perpendiculaire à l'axe Y
                 cote=2
 
-            Draw3d.rect3d(i, angleRay, nb, cote, posRayX, posRayY, murBrique)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
+            Draw3d.rect3d(i, angleRay, nb, cote, posRayX, posRayY, murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
             objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
             break  # stop la boucle, car le rayon a touché un mur
 
@@ -119,7 +119,7 @@ def car_affine(pente,cosAngle,sinAngle,diffPiSur2,posX, posY,signCos,signSin):  
             posYtest1 = posY + fy  # on augmente la position Y si on est dans le cas où on touche la frontière perpendiculaire à l'axe X pour avoir la position X du rayon dans ce cas-là"""
 
     posXtest2 = posX + (fx * signSin[0])  # calcul de la position X dans le cas où on touche la frontière perpendiculaire à l'axe Y
-    posYtest1 = posY + ((fy * signSin[0]) * signCos[0] * signSin[0])  # calcul de la position Y dans le cas où on touche la frontière perpendiculaire à l'axe X
+    posYtest1 = posY + (fy * signCos[0])  # calcul de la position Y dans le cas où on touche la frontière perpendiculaire à l'axe X
     debut = time.time()
     test1 = abs(dizainePosX / cosAngle) # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe X
     test2 = abs(fx / cosAngle)  # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe Y
