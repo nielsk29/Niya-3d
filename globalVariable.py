@@ -89,6 +89,8 @@ print(vieObjet)
 objet2d=[]  # liste des objets qu'on voit
 maxlong = 0
 murPorte = pygame.image.load("image/cotePorte.png")
+OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.mp3")
+CloseDoorSound = pygame.mixer.Sound("sound/doorClose.mp3")
 murBrique = pygame.image.load("image/wall_bricks4.jpg")  # image des murs
 viseur = pygame.image.load("image/viseur.png")
 posViseur = ((screenX-viseur.get_width())/2,(screenY-viseur.get_height())/2)

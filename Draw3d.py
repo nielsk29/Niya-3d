@@ -30,12 +30,10 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur, col, ligne):  # fonction q
             mur = glb.murPorte
         else:
             mur = imageMur
-    imageSizeX = mur.get_width() - 1  # taille X de l'image de base
-    imageSizeY = mur.get_height() - 1  # taille Y de l'image de base
+    imageSizeX = mur.get_width()   # taille X de l'image de base
+    imageSizeY = mur.get_height()   # taille Y de l'image de base
     RectY = math.ceil((glb.screenY-RectLong)/2)  # calcul posY du rectangle
     #print(RectY, imageSizeY)
-    coul= abs(int(nb*250/2400))  # couleur pour dégrader
-    #mur = pygame.transform.scale(imageMur, (int(RectLong), int(RectLong)))
     rectLargeBase = glb.RectLarg*imageSizeX/RectLong
 
     if cote ==1:  # si on a touché un mur parallel à l'axe X

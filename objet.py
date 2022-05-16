@@ -118,32 +118,31 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
         # Ximage = RectLarg * imgX / reduction
 
         posYOBJ = glb.screenY / 2 - reduction / glb.listeParametreObjet[element[4]][1]
-        if reduction >= glb.screenY*2:
-            reduction = glb.screenY*2
-            distanceOBJ = 5
-        #image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
-        image = glb.listeImageOBJ[element[4]][math.floor(element[5])]
-        imgX = image.get_width()
-        imgY = image.get_height()
-        rectLargbase = math.ceil(abs(glb.RectLarg * imgX / reduction))
-        posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /glb.listeParametreObjet[element[4]][0])
-        if (glb.millieuX-glb.RectLarg)<(glb.RectLarg * i)<(glb.millieuX+glb.RectLarg) and glb.shoot and element[4]==0 and glb.vieObjet[nb]>0:
-            glb.newSangLong = (int(reduction*2), int((reduction*2)* (glb.sangLongY/glb.sangLongX)))
-            glb.posSang = (glb.millieuX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
-            glb.toucher = True
-            pygame.mixer.Sound.play(glb.hitDemonSound)
-            glb.vieObjet[nb] -= 10
-            if glb.vieObjet[nb]<=0:
-                glb.lObjAnim.append(nb)
+        if posYOBJ<glb.screenY and distanceOBJ>20:
 
-        if rectLargbase + posRaySurOBJ > imgX:
-            image = image.subsurface((imgX - rectLargbase, 0, rectLargbase, imgY))
-        else:
-            image = image.subsurface((posRaySurOBJ, 0, rectLargbase, imgY))
-        image = glb.pygame.transform.scale(image, (abs(glb.RectLarg), abs(reduction)))
-        # print(imageTauneau,(posRaySurOBJ, 0,RectLarg , imgY))
+            #image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
+            image = glb.listeImageOBJ[element[4]][math.floor(element[5])]
+            imgX = image.get_width()
+            imgY = image.get_height()
+            rectLargbase = math.ceil(abs(glb.RectLarg * imgX / reduction))
+            posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /glb.listeParametreObjet[element[4]][0])
+            if (glb.millieuX-glb.RectLarg)<(glb.RectLarg * i)<(glb.millieuX+glb.RectLarg) and glb.shoot and element[4]==0 and glb.vieObjet[nb]>0:
+                glb.newSangLong = (int(reduction*2), int((reduction*2)* (glb.sangLongY/glb.sangLongX)))
+                glb.posSang = (glb.millieuX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
+                glb.toucher = True
+                pygame.mixer.Sound.play(glb.hitDemonSound)
+                glb.vieObjet[nb] -= 10
+                if glb.vieObjet[nb]<=0:
+                    glb.lObjAnim.append(nb)
 
-        glb.objet2d.append((distanceOBJ, (image, (glb.RectLarg * i, posYOBJ))))
+            if rectLargbase + posRaySurOBJ > imgX:
+                image = image.subsurface((imgX - rectLargbase, 0, rectLargbase, imgY))
+            else:
+                image = image.subsurface((posRaySurOBJ, 0, rectLargbase, imgY))
+            image = glb.pygame.transform.scale(image, (abs(glb.RectLarg), abs(reduction)))
+            # print(imageTauneau,(posRaySurOBJ, 0,RectLarg , imgY))
+
+            glb.objet2d.append((distanceOBJ, (image, (glb.RectLarg * i, posYOBJ))))
 
 """def SaveObjet(ray, penteRay, distanceMur, cosAngle, sinAngle):
     for element in listeObjet:

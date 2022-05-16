@@ -31,16 +31,22 @@ def anim():
     for element in glb.statusPorte:
         if element[2]:
             if element[1] or element[3]:
-                glb.statusPorte[nb][0] -= 5
+                if glb.statusPorte[nb][0] == glb.rectSizeX:
+                    pygame.mixer.Sound.play(glb.CloseDoorSound)
+                glb.statusPorte[nb][0] -= 3
                 glb.statusPorte[nb][3] = True
                 glb.statusPorte[nb][1] = False
                 if glb.statusPorte[nb][0] <= 0:
+                    glb.statusPorte[nb][0] = 0
                     glb.statusPorte[nb][1] = False
                     glb.statusPorte[nb][2] = False
                     glb.statusPorte[nb][3] = False
             else:
-                glb.statusPorte[nb][0] += 5
+                if glb.statusPorte[nb][0] == 0:
+                    pygame.mixer.Sound.play(glb.OpenDoorSound)
+                glb.statusPorte[nb][0] += 3
                 if glb.statusPorte[nb][0] >= glb.rectSizeX:
+                    glb.statusPorte[nb][0] = glb.rectSizeX
                     glb.statusPorte[nb][1] = True
                     glb.statusPorte[nb][2] = False
 
