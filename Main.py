@@ -31,7 +31,7 @@ def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
     frame = glb.font.render(str(glb.process), True,(0,0,0))
     textpro3 = glb.font.render(str(glb.process3), True,(0,0,0))
     glb.screen.blit(textFPS, (10, 30))
-    glb.screen.blit(glb.gunImage[glb.gunCurrentFrame], glb.posGun)
+    glb.screen.blit(glb.gunImage[math.floor(glb.gunCurrentFrame)], glb.posGun)
     glb.screen.blit(glb.viseur,glb.posViseur)
     #glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
     #glb.screen.blit(temps3d, (10, 170))

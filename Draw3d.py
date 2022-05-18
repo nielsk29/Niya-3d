@@ -11,10 +11,10 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur, col, ligne):  # fonction q
         RectLong = 1200/nb *110 * glb.reductionEcran  # calcul trouver par tâtonnement pour transformer la distance du rayon en longueur du rectangle
     else:
         RectLong = glb.lenListe-1
-    if RectLong>glb.maxlong:
+    """if RectLong>glb.maxlong:
         glb.maxlong=RectLong
     if RectLong>=glb.lenListe:
-        RectLong=glb.lenListe-1
+        RectLong=glb.lenListe-1"""
     #mur = glb.listeImage[math.floor(RectLong)]
     if cote == 1 :
         signe = math.copysign(1,(glb.playerX-rayX))

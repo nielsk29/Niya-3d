@@ -1,10 +1,14 @@
+import time
+
 import globalVariable as glb
 import pygame
 import math
+import random
+import objet
 
 
 def anim():
-    if glb.gunStatus == True and glb.gunCurrentFrame<16:
+    if glb.gunStatus == True and glb.gunCurrentFrame<10:
         if glb.gunCurrentFrame==4:
             pygame.mixer.Sound.play(glb.gunSound)
         glb.gunCurrentFrame += 2
@@ -22,9 +26,9 @@ def anim():
         glb.toucher = False
     nb=0
     for element in glb.lObjAnim:
-        frame = glb.listeObjet[element][3]
+        frame = glb.listeMonstre[element][3]
         if frame<10:
-            glb.listeObjet[element][3] += 0.2
+            glb.listeMonstre[element][3] += 0.2
         else:
             del glb.lObjAnim[nb]
     nb=0
@@ -51,3 +55,42 @@ def anim():
                     glb.statusPorte[nb][2] = False
 
         nb+=1
+    nb=0
+
+    for element in glb.listeBall:
+        cosBalle =  math.cos(element[4])
+        sinBalle =  math.sin(element[4])
+        glb.listeBall[nb][1] =glb.listeBall[nb][1]-cosBalle*30
+        glb.listeBall[nb][2] =glb.listeBall[nb][2]-sinBalle*30
+        ligne = int(glb.listeBall[nb][2] / glb.rectSizeY)
+        col = int(glb.listeBall[nb][1] / glb.rectSizeX)
+        carre = ligne * glb.carteSize[0] + col
+        if glb.Carte[carre]=="1":
+            del glb.listeBall[nb]
+        nb+=1
+    nb = 0
+    for element in glb.statusMonstre :
+        if glb.vieMonstre[nb]>0 :
+            if element[0] and not(element[1]):
+                diffTemps = time.time()-element[2]
+                if diffTemps>element[4]:
+                    glb.statusMonstre[nb][1] = True
+                    glb.statusMonstre[nb][4] = random.randint(1,5)
+                    glb.statusMonstre[nb][2] = time.time()
+            if glb.statusMonstre[nb][1]:
+                frame = glb.listeMonstre[nb][3]
+                if frame >=13:
+                    glb.statusMonstre[nb][3] = False
+                    glb.statusMonstre[nb][1] = False
+                    glb.listeMonstre[nb][3] = 0
+                elif math.floor(frame) == 12 and element[3] == False:
+                    angle = objet.calculAngleObj((glb.playerX - glb.listeMonstre[nb][1]),
+                                                 (glb.playerY - glb.listeMonstre[nb][2]))
+                    glb.listeBall.append([4, glb.listeMonstre[nb][1], glb.listeMonstre[nb][2], 0, angle])
+                    glb.statusMonstre[nb][3] = True
+                elif frame==0 :
+                    glb.listeMonstre[nb][3] = 11
+                else:
+                    glb.listeMonstre[nb][3] += 0.5
+
+        nb += 1

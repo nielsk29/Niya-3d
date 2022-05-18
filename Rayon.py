@@ -38,12 +38,13 @@ def rays(murBrique):   # fonction qui envoie les rayons
             lignePosRay = math.floor(posRayY/glb.rectSizeY)  # calcul de la ligne à laquelle se trouve le rayon
             carre=int(lignePosRay*glb.carteSize[0] + colPosRay)  # calcul du carré à laquelle se trouve le rayon grâce à sa colonne et sa ligne
 
-            glb.listeRond.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))  # ajoute un rond à la frontière pour la miniMap
+            glb.listeRond.append((int(posRayX * glb.minimap / glb.gameX), int(posRayY * glb.minimap / glb.gameY)))  # ajoute un rond à la frontière pour la miniMap
             if glb.Carte[carre] == "1":  # si le rayon touche un mur
                 glb.listeRay.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))  # ajoute le rayon pour la miniMap
                 #objet.SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)  # utilise la fonction qui regarde si le rayon à toucher un objet
                 pente2 = pente
                 Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
+                print((i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY))
                 objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
                 break  # stop la boucle, car le rayon a touché un mur
             """if Carte[carre] == "2":
@@ -67,9 +68,9 @@ def pixelparpixel(angleRay,i, murBrique,pente,listAngleObj,distanceRay):  # fonc
                 cote=1
             else:  # sinon ça veut dire qu'on a touché un mur perpendiculaire à l'axe Y
                 cote=2
-
+            print((i, nb, angleRay, listAngleObj, pente, posRayX, posRayY))
             Draw3d.rect3d(i, angleRay, nb, cote, posRayX, posRayY, murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
-            objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
+            objet.drawOBJ(i, nb, angleRay, listAngleObj, pente, posRayX, posRayY)
             break  # stop la boucle, car le rayon a touché un mur
 
 

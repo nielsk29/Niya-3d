@@ -17,8 +17,8 @@ def zqsd():
     if keys[pygame.K_d]:  # si on appuie sur le "d"
         signeCos = math.copysign(1, math.cos(glb.playerAngle))
         signeSin = math.copysign(1, math.sin(glb.playerAngle))
-        playerCol = int((glb.playerX + signeSin * 24) / glb.rectSizeX)
-        playerLigne = int((glb.playerY - signeCos * 24) / glb.rectSizeY)
+        playerCol = int((glb.playerX + signeSin * 12) / glb.rectSizeX)
+        playerLigne = int((glb.playerY - signeCos * 12) / glb.rectSizeY)
         curentLigne = int(glb.playerY / glb.rectSizeY)
         curentCol = int(glb.playerX / glb.rectSizeX)
         playerCarre = (playerLigne * glb.carteSize[0] + curentCol, curentLigne * glb.carteSize[0] + playerCol)
@@ -28,8 +28,8 @@ def zqsd():
     if keys[pygame.K_q]: # si on appuie sur le q
         signeCos = math.copysign(1, math.cos(glb.playerAngle))
         signeSin = math.copysign(1, math.sin(glb.playerAngle))
-        playerCol = int((glb.playerX - signeSin * 24) / glb.rectSizeX)
-        playerLigne = int((glb.playerY + signeCos * 24) / glb.rectSizeY)
+        playerCol = int((glb.playerX - signeSin * 12) / glb.rectSizeX)
+        playerLigne = int((glb.playerY + signeCos * 12) / glb.rectSizeY)
         curentLigne = int(glb.playerY / glb.rectSizeY)
         curentCol = int(glb.playerX / glb.rectSizeX)
         playerCarre = (playerLigne * glb.carteSize[0] + curentCol, curentLigne * glb.carteSize[0] + playerCol)
@@ -39,8 +39,8 @@ def zqsd():
     if keys[pygame.K_s]: # si on appuie sur le "s"
         signeCos = math.copysign(1, math.cos(glb.playerAngle))
         signeSin = math.copysign(1, math.sin(glb.playerAngle))
-        playerCol = int((glb.playerX + signeCos * 24) / glb.rectSizeX)
-        playerLigne = int((glb.playerY + signeSin * 24) / glb.rectSizeY)
+        playerCol = int((glb.playerX + signeCos * 12) / glb.rectSizeX)
+        playerLigne = int((glb.playerY + signeSin * 12) / glb.rectSizeY)
         curentLigne = int(glb.playerY / glb.rectSizeY)
         curentCol = int(glb.playerX / glb.rectSizeX)
         playerCarre = (playerLigne * glb.carteSize[0] + curentCol, curentLigne * glb.carteSize[0] + playerCol)
@@ -52,8 +52,8 @@ def zqsd():
         # On fait la même chose sauf qu'au lieu d'augmenter du cosinus ou le sinus on le soustraie le cosinus ou le sinus
         signeCos = math.copysign(1,math.cos(glb.playerAngle))
         signeSin = math.copysign(1, math.sin(glb.playerAngle))
-        playerCol=int((glb.playerX- signeCos * 24)/glb.rectSizeX)
-        playerLigne=int((glb.playerY-signeSin * 24)/glb.rectSizeY)
+        playerCol=int((glb.playerX- signeCos * 12)/glb.rectSizeX)
+        playerLigne=int((glb.playerY-signeSin * 12)/glb.rectSizeY)
         curentLigne = int(glb.playerY/glb.rectSizeY)
         curentCol = int(glb.playerX / glb.rectSizeX)
         playerCarre= (playerLigne*glb.carteSize[0] + curentCol,curentLigne*glb.carteSize[0] + playerCol)

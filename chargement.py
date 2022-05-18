@@ -76,7 +76,7 @@ def charg():
         sombre.set_alpha(int(abs(x*200/( glb.screenY/1.5)-200)))
         sombre.fill((0, 0, 0))
         glb.rectSombre[x] = (sombre,(x,int(abs(x*150/( glb.screenY/1.5)-150)), glb.screenY))
-    for x in range(0,17):
+    for x in range(0,12):
         nameFrame = "image/gun/frame-"+str(x+1)+".gif"
         image = pygame.image.load(nameFrame)
         glb.gunImage[x] = pygame.transform.scale(image,glb.tailleGun)

@@ -38,7 +38,7 @@ Carte = ("111111111111111111111"#0
          "100000000100000000001"#2
          "100000000101000000001"#3
          "100000000121000001111"#4
-         "121111111101111110001"#5
+         "101111111101111110001"#5
          "101000000000000000121"#6               # carte avec 1 = mur et 0 = rien
          "101000001101111111001"#7
          "101000000101000000001"#8
@@ -55,19 +55,21 @@ Carte = ("111111111111111111111"#0
          "100000000100000000001"#19
          "111111111111111111111")#20
          #;1;3;5;7;9;1;3;5;7;9;
-
-listeObjet = [[1, 350, 150,0],  [0, 150, 1350,0 ],  [0, 850, 1350,0 ],
+nbPorte = Carte.count('2')
+listeObjet = [[1, 350, 150,0],  [1, 1950, 1850,0]]        # liste emplacement objet sous forme (objet,posX,posY)
+listeMonstre = [[0, 150, 1350,0 ],  [0, 850, 1350,0 ],
                [0, 150, 1950,0 ],  [0, 350, 1650,0 ],  [0, 350, 1150,0 ],
                [0, 650, 950,0 ],  [0, 1750, 550,0 ],  [0, 1850, 750,0 ],
                [0, 1750, 350,0 ],  [0, 1750, 150,0 ],  [0, 1550, 1250,0 ],
-               [0, 1650, 1250,0 ],  [0, 1550, 1350,0 ],  [0, 1650, 1350,0 ],[1, 1950, 1850,0]]        # liste emplacement objet sous forme (objet,posX,posY)
+               [0, 1650, 1250,0 ],  [0, 1550, 1350,0 ],  [0, 1650, 1350,0 ]]
+listeBall = []
 statusPorte=[]
 for element in Carte:
     if element=="2":
         statusPorte.append([0,False,False,False])
     else:
         statusPorte.append([0,True,False,False])
-sizeMmap=20  # taille carré minimap
+sizeMmap=int(screenX/100)  # taille carré minimap
 minimap = sizeMmap*carteSize[0]  # taille minimap en total
 darkGrey = (100, 100, 100)
 Grey = (50, 50, 50)
@@ -80,17 +82,18 @@ process = 0  # temps fps
 process2 = 0
 process3 = 0
 pygame.mouse.set_visible(False)
-listeParametreObjet = [(50,2.50, 100,50),(30,-1, 40,1000),(100,2, 110,1000),(100,2, 110,1000)]
-vieObjet = []
+listeParametreObjet = [(50,2.50, 100,100),(30,-1, 40,1000),(100,2, 110,1000),(100,2, 110,1000),(10,3, 13,1000)]
+vieMonstre = []
+statusMonstre = []
 lObjAnim = []
-for element in listeObjet:
-    vieObjet.append(listeParametreObjet[element[0]][3])
-print(vieObjet)
+for element in listeMonstre:
+    statusMonstre.append([False, False, 0,False,0])  #[visible, animation tir, temps dernier tir, à tirer, attente prochain tir]
+    vieMonstre.append(listeParametreObjet[element[0]][3])
 objet2d=[]  # liste des objets qu'on voit
 maxlong = 0
 murPorte = pygame.image.load("image/cotePorte.png")
 OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.mp3")
-CloseDoorSound = pygame.mixer.Sound("sound/doorClose.mp3")
+CloseDoorSound = pygame.mixer.Sound("sound/doorOpen.mp3")
 murBrique = pygame.image.load("image/wall_bricks4.jpg")  # image des murs
 viseur = pygame.image.load("image/viseur.png")
 posViseur = ((screenX-viseur.get_width())/2,(screenY-viseur.get_height())/2)
@@ -110,11 +113,14 @@ newSangLong = (0,0)
 posSang = (int((screenX-sangLongX)/2),int((screenY-sangLongY)/2))
 sangCurrentFrame = 0
 toucher = False
-listeImageOBJ = [[pygame.image.load("image/demon.gif")], [pygame.image.load("image/kit.png")],[pygame.image.load("image/door.png")],[pygame.image.load("image/doorReverse.png")]]  # image Objet
+listeImageOBJ = [[pygame.image.load("image/demon.gif")], [pygame.image.load("image/kit.png")],[pygame.image.load("image/door.png")],[pygame.image.load("image/doorReverse.png")],[pygame.image.load("image/ball.png")]]  # image Objet
 for x in range(1,11):
     nameFrame = "image/cyberdemon/death/frame-" + str(x) + ".gif"
     listeImageOBJ[0].append(pygame.image.load(nameFrame))
-print(listeImageOBJ)
+for x in range(1,3):
+    nameFrame = "image/cyberdemon/tir/frame-" + str(x) + ".gif"
+    listeImageOBJ[0].append(pygame.image.load(nameFrame))
+print(listeImageOBJ[0])
 rectSombre = [0]*screenY
 font = pygame.font.SysFont('freesansbold.ttf', 90)  # Police pour les textes
 temps = pygame.time.Clock()  # Initialisation temps
