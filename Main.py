@@ -64,5 +64,5 @@ while True:  # boucle infinie jusqu'a qu'on quitte le jeu
     menu.afficher()
     glb.process = time.time() - debut  # fin chronomètre pour savoir le temps que prend une seul image à être affiché
     pygame.display.flip()  # mets à jour la fenêtre donc affiche la frame
-    glb.temps.tick(25)
+    glb.temps.tick(30)
 

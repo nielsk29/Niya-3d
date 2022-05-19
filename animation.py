@@ -60,11 +60,29 @@ def anim():
     for element in glb.listeBall:
         cosBalle =  math.cos(element[4])
         sinBalle =  math.sin(element[4])
+        anglePlayer = objet.calculAngleObj(element[1]-glb.playerX, element[2]-glb.playerY)
         glb.listeBall[nb][1] =glb.listeBall[nb][1]-cosBalle*30
         glb.listeBall[nb][2] =glb.listeBall[nb][2]-sinBalle*30
         ligne = int(glb.listeBall[nb][2] / glb.rectSizeY)
         col = int(glb.listeBall[nb][1] / glb.rectSizeX)
         carre = ligne * glb.carteSize[0] + col
+        diffAngle = abs(anglePlayer-element[4])
+        if diffAngle>glb.pi :
+            reverse = anglePlayer < element[4]
+        else :
+            reverse = anglePlayer > element[4]
+        print(anglePlayer,element[4])
+        if glb.pi8*9 > diffAngle > glb.pi8*7:
+            glb.listeBall[nb][3] = 0
+        if glb.pi8*7 > diffAngle > glb.pi8*5 or glb.pi8*11 > diffAngle > glb.pi8*9:
+            glb.listeBall[nb][3] = 1 + reverse
+        if glb.pi8*5 > diffAngle > glb.pi8*3 or glb.pi8*13 > diffAngle > glb.pi8*11:
+            glb.listeBall[nb][3] = 3 + reverse
+        if glb.pi8*3 > diffAngle > glb.pi8 or glb.pi8*15 > diffAngle > glb.pi8*13:
+            glb.listeBall[nb][3] = 5 + reverse
+        if glb.pi8 > diffAngle or glb.pi8*15 < diffAngle:
+            glb.listeBall[nb][3] = 7
+        print(glb.listeBall[nb][3])
         if glb.Carte[carre]=="1":
             del glb.listeBall[nb]
         if (abs(element[1]-glb.playerX)<10 and abs(element[2]-glb.playerY)<10) \
@@ -81,7 +99,7 @@ def anim():
                 diffTemps = time.time()-element[2]
                 if diffTemps>element[4]:
                     glb.statusMonstre[nb][1] = True
-                    glb.statusMonstre[nb][4] = random.randint(1,5)
+                    glb.statusMonstre[nb][4] = random.randint(5,10)
                     glb.statusMonstre[nb][2] = time.time()
             if glb.statusMonstre[nb][1]:
                 frame = glb.listeMonstre[nb][3]
@@ -92,6 +110,7 @@ def anim():
                 elif math.floor(frame) == 12 and element[3] == False:
                     angle = objet.calculAngleObj((glb.playerX - glb.listeMonstre[nb][1]),
                                                  (glb.playerY - glb.listeMonstre[nb][2]))
+                    print("////")
                     glb.listeBall.append([4, glb.listeMonstre[nb][1], glb.listeMonstre[nb][2], 0, angle])
                     glb.statusMonstre[nb][3] = True
                 elif frame==0 :
@@ -103,8 +122,15 @@ def anim():
     nb = 0
     for element in glb.listeObjet:
         if element[0] == 5:
-            if abs(glb.playerX - element[1]) < 10 and abs(glb.playerY == element[2]) < 10:
+            if abs(glb.playerX - element[1]) < 10 and abs(glb.playerY - element[2]) < 10:
                 glb.ammoSound.play()
                 glb.nbballes += random.randint(10, 25)
+                del glb.listeObjet[nb]
+        if element[0] == 1:
+            if abs(glb.playerX - element[1]) < 10 and abs(glb.playerY - element[2]) < 10:
+                glb.medkitSound.play()
+                glb.playerVie += random.randint(10, 25)
+                if glb.playerVie > 100:
+                    glb.playerVie = 100
                 del glb.listeObjet[nb]
         nb += 1

@@ -29,6 +29,7 @@ pi=(math.pi // precision) * precision  # récupération de pi pour gagner du tem
 playerAngle = pi/2  # angle à la quel regarde le joueur
 angleRegard = pi/4  # angle que l'on rajoute et soustrais à l'angle du joueur pour savoir sur quel intervalle d'angle on doit envoyer les rayons
 pi2=pi*2  # 2pi
+pi8 = pi/8
 nbRay =int(screenX/4) # nombre de rayons qu'on envoie
 RectLarg = math.ceil(screenX/nbRay)  # calcul de la largeur d'un rectangle de l'affichage 3d
 listeRay = []  # liste des rayons qui ce met à jour à chaque image et qui est utilisé pour la minimap
@@ -78,7 +79,7 @@ darkGrey = (100, 100, 100)
 Grey = (50, 50, 50)
 mapPlayerX = playerX * minimap / gameX  # emplacement X sur la minimap du joueur
 mapPlayerY = playerY * minimap / gameY  # emplacement Y sur la minimap du joueur
-vitesse=8  # vitesse joueur
+vitesse=6  # vitesse joueur
 varVitesse = 1
 afficherMap=False  # boolean true si la minimap est affiché
 process = 1  # temps fps
@@ -113,6 +114,8 @@ gunImage = [pygame.image.load("image/gun.gif")]*17
 gunSound = pygame.mixer.Sound("sound/gunSound.wav")
 hitDemonSound = pygame.mixer.Sound("sound/HitDemon.wav")
 ammoSound = pygame.mixer.Sound("sound/ammo.wav")
+medkitSound = pygame.mixer.Sound("sound/medkit.wav")
+
 hitDemonSound.set_volume(0.3)
 gunSound.set_volume(0.3)
 OpenDoorSound.set_volume(0.3)
@@ -130,7 +133,17 @@ newSangLong = (0,0)
 posSang = (int((screenX-sangLongX)/2),int((screenY-sangLongY)/2))
 sangCurrentFrame = 0
 toucher = False
-listeImageOBJ = [[pygame.image.load("image/demon.gif")], [pygame.image.load("image/kit.png")],[pygame.image.load("image/door.png")],[pygame.image.load("image/doorReverse.png")],[pygame.image.load("image/ball.png")], [pygame.image.load("image/munitions.png")]]  # image Objet
+imageRocket = [pygame.image.load("image/rocket/face.png"),
+               pygame.image.load("image/rocket/coteFace.png"),pygame.image.load("image/rocket/coteFaceReverse.png"),
+               pygame.image.load("image/rocket/cote.png"),pygame.image.load("image/rocket/coteReverse.png"),
+               pygame.image.load("image/rocket/coteBack.png"),pygame.image.load("image/rocket/coteBackReverse.png"),
+               pygame.image.load("image/rocket/Back.png")]
+listeImageOBJ = [[pygame.image.load("image/demon.gif")],
+                 [pygame.image.load("image/kit.png")],
+                 [pygame.image.load("image/door.png")],
+                 [pygame.image.load("image/doorReverse.png")],
+                 imageRocket,
+                 [pygame.image.load("image/munitions.png")]]  # image Objet
 for x in range(1,11):
     nameFrame = "image/cyberdemon/death/frame-" + str(x) + ".gif"
     listeImageOBJ[0].append(pygame.image.load(nameFrame))
