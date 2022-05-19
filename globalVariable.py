@@ -3,10 +3,13 @@ from math import *
 import math
 import sys
 import chargement
+import os
 
+os.getcwd() # Log this line.
 screenMulti = 1  # Si on est sur sur un plus petit écran mettre à 0.5
+
 pygame.init()  # initialisation de pygame
-pygame.mixer.init()
+pygame.mixer.init(44100, -16, 2, 2048)
 screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)  # initialisation de la fenêtre
 screenX, screenY = screen.get_size() # taille X de la carte et taille X de la fenêtre divisé par deux (en pixel)
 millieuX = screenX/2
@@ -38,7 +41,7 @@ Carte = ("111111111111111111111"#0
          "100000000100000000001"#2
          "100000000101000000001"#3
          "100000000121000001111"#4
-         "101111111101111110001"#5
+         "121111111101111110001"#5
          "101000000000000000121"#6               # carte avec 1 = mur et 0 = rien
          "101000001101111111001"#7
          "101000000101000000001"#8
@@ -56,7 +59,7 @@ Carte = ("111111111111111111111"#0
          "111111111111111111111")#20
          #;1;3;5;7;9;1;3;5;7;9;
 nbPorte = Carte.count('2')
-listeObjet = [[1, 350, 150,0],  [1, 1950, 1850,0]]        # liste emplacement objet sous forme (objet,posX,posY)
+listeObjet = [[1, 350, 150,0],  [1, 1950, 1850,0],  [5, 550, 350,0]]        # liste emplacement objet sous forme (objet,posX,posY)
 listeMonstre = [[0, 150, 1350,0 ],  [0, 850, 1350,0 ],
                [0, 150, 1950,0 ],  [0, 350, 1650,0 ],  [0, 350, 1150,0 ],
                [0, 650, 950,0 ],  [0, 1750, 550,0 ],  [0, 1850, 750,0 ],
@@ -78,11 +81,17 @@ mapPlayerY = playerY * minimap / gameY  # emplacement Y sur la minimap du joueur
 vitesse=8  # vitesse joueur
 varVitesse = 1
 afficherMap=False  # boolean true si la minimap est affiché
-process = 0  # temps fps
+process = 1  # temps fps
 process2 = 0
 process3 = 0
 pygame.mouse.set_visible(False)
-listeParametreObjet = [(50,2.50, 100,100),(30,-1, 40,1000),(100,2, 110,1000),(100,2, 110,1000),(10,3, 13,1000)]
+listeParametreObjet = [(50,2.50, 100,100), #Monstre
+                       (30,-1, 40,1000), #Kit de soin
+                       (100,2, 110,1000), #Porte
+                       (100,2, 110,1000), #Porte à l'envers
+                       (10,3, 13,1000), # Balle monstre
+                       (30,-1, 40,1000)]  #Munitions
+                        #(largeur sur map, coeff hauteur, coeff taille, )
 vieMonstre = []
 statusMonstre = []
 lObjAnim = []
@@ -91,16 +100,24 @@ for element in listeMonstre:
     vieMonstre.append(listeParametreObjet[element[0]][3])
 objet2d=[]  # liste des objets qu'on voit
 maxlong = 0
+nbballes = 30
+playerVie = 100
+ballesimg = pygame.image.load("image/balles.png")
 murPorte = pygame.image.load("image/cotePorte.png")
-OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.mp3")
-CloseDoorSound = pygame.mixer.Sound("sound/doorOpen.mp3")
+OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.wav")
+CloseDoorSound = pygame.mixer.Sound("sound/doorClose.wav")
 murBrique = pygame.image.load("image/wall_bricks4.jpg")  # image des murs
 viseur = pygame.image.load("image/viseur.png")
 posViseur = ((screenX-viseur.get_width())/2,(screenY-viseur.get_height())/2)
 gunImage = [pygame.image.load("image/gun.gif")]*17
-gunSound = pygame.mixer.Sound("sound/gunSound.mp3")
-hitDemonSound = pygame.mixer.Sound("sound/HitDemon.mp3")
+gunSound = pygame.mixer.Sound("sound/gunSound.wav")
+hitDemonSound = pygame.mixer.Sound("sound/HitDemon.wav")
+ammoSound = pygame.mixer.Sound("sound/ammo.wav")
 hitDemonSound.set_volume(0.3)
+gunSound.set_volume(0.3)
+OpenDoorSound.set_volume(0.3)
+CloseDoorSound.set_volume(0.3)
+
 tailleGun =(int(gunImage[0].get_width()*screenX/2000),int(gunImage[0].get_height()*screenY/1000))
 posGun = (screenX/2-tailleGun[0]/2,screenY-tailleGun[1])
 gunCurrentFrame = 1
@@ -113,7 +130,7 @@ newSangLong = (0,0)
 posSang = (int((screenX-sangLongX)/2),int((screenY-sangLongY)/2))
 sangCurrentFrame = 0
 toucher = False
-listeImageOBJ = [[pygame.image.load("image/demon.gif")], [pygame.image.load("image/kit.png")],[pygame.image.load("image/door.png")],[pygame.image.load("image/doorReverse.png")],[pygame.image.load("image/ball.png")]]  # image Objet
+listeImageOBJ = [[pygame.image.load("image/demon.gif")], [pygame.image.load("image/kit.png")],[pygame.image.load("image/door.png")],[pygame.image.load("image/doorReverse.png")],[pygame.image.load("image/ball.png")], [pygame.image.load("image/munitions.png")]]  # image Objet
 for x in range(1,11):
     nameFrame = "image/cyberdemon/death/frame-" + str(x) + ".gif"
     listeImageOBJ[0].append(pygame.image.load(nameFrame))

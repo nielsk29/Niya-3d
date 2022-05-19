@@ -67,7 +67,13 @@ def anim():
         carre = ligne * glb.carteSize[0] + col
         if glb.Carte[carre]=="1":
             del glb.listeBall[nb]
+        if (abs(element[1]-glb.playerX)<10 and abs(element[2]-glb.playerY)<10) \
+                or (abs(glb.playerX - (element[1]+cosBalle*20)) < 10 and abs(glb.playerY - (element[2]+sinBalle*20)) < 10) \
+                or (abs(glb.playerX - (element[1]+cosBalle*10)) < 10 and abs(glb.playerY - (element[2]+sinBalle*10)) < 10) :
+            glb.playerVie -= 30
+            del glb.listeBall[nb]
         nb+=1
+
     nb = 0
     for element in glb.statusMonstre :
         if glb.vieMonstre[nb]>0 :
@@ -93,4 +99,12 @@ def anim():
                 else:
                     glb.listeMonstre[nb][3] += 0.5
 
+        nb += 1
+    nb = 0
+    for element in glb.listeObjet:
+        if element[0] == 5:
+            if abs(glb.playerX - element[1]) < 10 and abs(glb.playerY == element[2]) < 10:
+                glb.ammoSound.play()
+                glb.nbballes += random.randint(10, 25)
+                del glb.listeObjet[nb]
         nb += 1

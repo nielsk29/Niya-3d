@@ -44,7 +44,6 @@ def rays(murBrique):   # fonction qui envoie les rayons
                 #objet.SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)  # utilise la fonction qui regarde si le rayon à toucher un objet
                 pente2 = pente
                 Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
-                print((i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY))
                 objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
                 break  # stop la boucle, car le rayon a touché un mur
             """if Carte[carre] == "2":
@@ -68,7 +67,6 @@ def pixelparpixel(angleRay,i, murBrique,pente,listAngleObj,distanceRay):  # fonc
                 cote=1
             else:  # sinon ça veut dire qu'on a touché un mur perpendiculaire à l'axe Y
                 cote=2
-            print((i, nb, angleRay, listAngleObj, pente, posRayX, posRayY))
             Draw3d.rect3d(i, angleRay, nb, cote, posRayX, posRayY, murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
             objet.drawOBJ(i, nb, angleRay, listAngleObj, pente, posRayX, posRayY)
             break  # stop la boucle, car le rayon a touché un mur
