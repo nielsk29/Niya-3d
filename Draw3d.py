@@ -61,5 +61,5 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur, col, ligne):  # fonction q
     debut = time.time()
     if RectLong < (glb.screenY/1.5):
         glb.screen.blit(glb.rectSombre[int(RectLong)][0], (iray*glb.RectLarg, RectY))
-    glb.process3 += time.time() -debut
+
     #pygame.draw.rect(screen, (coul, coul, coul), (iray*RectLarg, RectY, RectLarg, RectLong))

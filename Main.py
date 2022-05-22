@@ -33,9 +33,9 @@ def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
     glb.screen.blit(textFPS, (10, 30))
     glb.screen.blit(glb.gunImage[math.floor(glb.gunCurrentFrame)], glb.posGun)
     glb.screen.blit(glb.viseur,glb.posViseur)
-    #glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
+    glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
     glb.screen.blit(temps3d, (10, 170))
-    #glb.screen.blit(textpro3, (10, 240))
+    glb.screen.blit(textpro3, (10, 240))
 
 f_all(glb.murBrique)  # créer la 1ère image
 while True:  # boucle infinie jusqu'a qu'on quitte le jeu

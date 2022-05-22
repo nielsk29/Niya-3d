@@ -24,7 +24,7 @@ def rays(murBrique):   # fonction qui envoie les rayons
         sinAngle = math.sin(angleRay)   # calcul du sinus de l'angle du rayon
         signCos = (math.copysign(1,cosAngle),cosAngle<0)
         signSin = (math.copysign(1, sinAngle),sinAngle<0)
-
+        fin = False
         for nbCar in range(glb.diagCarre):  # boucle qui va envoyé le rayon à la prochaine frontière entre les carrés donc le nombre maximal de cette boucle est le diagonal de la carte
 
             distCarre, posRayX, posRayY, cote = car_affine(pente,cosAngle,sinAngle,diffPiSur2, posRayX, posRayY,signCos,signSin)  # utilisation de la fonction qui va calculer où le rayon va toucher la prochaine frontière entre les carrés
@@ -46,10 +46,13 @@ def rays(murBrique):   # fonction qui envoie les rayons
                 Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
                 objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
                 break  # stop la boucle, car le rayon a touché un mur
-            """if Carte[carre] == "2":
-                if (carre in objCarre) == False:
-                    listeObjet.append((i,distanceRay))
-                    objCarre.append(carre)"""
+            if fin:
+                glb.listeRay.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))
+                objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
+                break  # stop la boucle, car le rayon a touché un mur
+
+            if glb.Carte[carre] == "2" and glb.statusPorte[carre][0] == 0:
+                    fin = True
     objet.drawObjet2d()
 def pixelparpixel(angleRay,i, murBrique,pente,listAngleObj,distanceRay):  # fonction pour calculer le rayon pixel par pixel pour quand le rayon est perpendiculaire ou parallèle à l'axe des abscisses
     for nb in range(glb.diagonal):  # boucle qui va calculer le prochain pixel donc pour maximum de répétition le diagonal des pixels
@@ -76,14 +79,8 @@ def car_affine(pente,cosAngle,sinAngle,diffPiSur2,posX, posY,signCos,signSin):  
     debut = time.time()
     if diffPiSur2<0.0001 or diffPiSur2>(glb.pi/2 - 0.0001 ):  # si la pente risque d'être infini ou égal à 0
         return 0,0,0,False  # termine la fonction pour calculer le rayon pixel par pixel
-
     def f_affine(x):  # création de la fonction affine du rayon avec sa pente
         return pente*x
-    """dizainePosX = (glb.rectSizeX*signCos[1]) + (posX % glb.rectSizeX)*signCos[0]
-    posXtest1 = posX - dizainePosX*signCos[0] - 0.05*signCos[0]
-    dizainePosY = (glb.rectSizeY*signSin[1]) + (posY % glb.rectSizeY)*signSin[0]
-    posYtest2 = posY - dizainePosY*signSin[0] - 0.05*signSin[0]
-    """
     if signCos[1]:  # si le cosinus de l'angle du rayon est négatif ça veut dire que la prochaine frontière qui peut toucher si elle est sur perpendiculaire à l'axe Y est plus petite que la position X actuelle du rayon
 
         dizainePosX = glb.rectSizeX - posX % glb.rectSizeX  # différence entre la pos X du rayon et la position X de la frontière qu'il peut toucher
@@ -102,29 +99,14 @@ def car_affine(pente,cosAngle,sinAngle,diffPiSur2,posX, posY,signCos,signSin):  
 
     fx = dizainePosY / pente   # calcul de l'incrémentation de la position X pour atteindre l'endroit où il va toucher la frontière si elle est perpendiculaire à l'axe Y
     fy = f_affine(dizainePosX)   # calcul l'incrémentation de la position Y pour atteindre l'endroit où il va toucher la frontière si elle est perpendiculaire à l'axe X
-    """if cosAngle*sinAngle > 0:  # si le cosinus et le sinus sont de même signe
-        if sinAngle > 0:  # si le sinus et le cosinus sont positifs
-            posXtest2 = posX + fx   # on augmente la position x si on est dans le cas où on touche la frontière perpendiculaire à l'axe Y pour avoir la position X du rayon dans ce cas-là
-            posYtest1 = posY + fy  # on augmente la position Y si on est dans le cas où on touche la frontière perpendiculaire à l'axe X pour avoir la position X du rayon dans ce cas-là
-        else:  # si le sinus et le cosinus sont négatifs
-            posXtest2 = posX - fx   # on baisse la position x si on est dans le cas où on touche la frontière perpendiculaire à l'axe Y pour avoir la position X du rayon dans ce cas-là
-            posYtest1 = posY - fy  # on baisse la position Y si on est dans le cas où on touche la frontière perpendiculaire à l'axe X pour avoir la position X du rayon dans ce cas-là
-    else:  # si le cosinus et le sinus ne sont pas de même signe
-        if sinAngle > 0:  # si le sinus est positif et le cosinus est négatif
-            posXtest2 = posX + fx   # on augmente la position x si on est dans le cas où on touche la frontière perpendiculaire à l'axe Y pour avoir la position X du rayon dans ce cas-là
-            posYtest1 = posY - fy  # on baisse la position Y si on est dans le cas où on touche la frontière perpendiculaire à l'axe X pour avoir la position X du rayon dans ce cas-là
-        else:  # si le sinus est négatif et le cosinus est positif
-            posXtest2 = posX - fx  # on baisse la position x si on est dans le cas où on touche la frontière perpendiculaire à l'axe Y pour avoir la position X du rayon dans ce cas-là
-            posYtest1 = posY + fy  # on augmente la position Y si on est dans le cas où on touche la frontière perpendiculaire à l'axe X pour avoir la position X du rayon dans ce cas-là"""
+    if abs(fx*dizainePosY)<abs(fy*dizainePosX):
+        posXtest2 = posX + (fx * signSin[0])  # calcul de la position X dans le cas où on touche la frontière perpendiculaire à l'axe Y
+        test2 = abs(fx / cosAngle)  # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe Y
+        return test2, posXtest2, posYtest2, 2  # on renvoie les valeurs dans le cas ou le rayon touche en premier une frontière perpendiculaire à l'axe Y
 
-    posXtest2 = posX + (fx * signSin[0])  # calcul de la position X dans le cas où on touche la frontière perpendiculaire à l'axe Y
-    posYtest1 = posY + (fy * signCos[0])  # calcul de la position Y dans le cas où on touche la frontière perpendiculaire à l'axe X
-    debut = time.time()
-    test1 = abs(dizainePosX / cosAngle) # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe X
-    test2 = abs(fx / cosAngle)  # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe Y
-
-    if test1 < test2:  # on regarde quelle est la plus petite distance entre le deux et ce sera celle-là qu'il aura touché en premier donc la prochaine frontière que le rayon touche
-        return test1,posXtest1, posYtest1,1  # on renvoie les valeurs dans le cas ou le rayon touche en premier une frontière perpendiculaire à l'axe X
     else:
-        return test2, posXtest2, posYtest2,2  # on renvoie les valeurs dans le cas ou le rayon touche en premier une frontière perpendiculaire à l'axe Y
+        posYtest1 = posY + (fy * signCos[0])  # calcul de la position Y dans le cas où on touche la frontière perpendiculaire à l'axe X
+        test1 = abs(dizainePosX / cosAngle) # calcul distance jusqu'à la prochaine frontière que va toucher le rayon perpendiculaire à l'axe X
+        return test1, posXtest1, posYtest1, 1  # on renvoie les valeurs dans le cas ou le rayon touche en premier une frontière perpendiculaire à l'axe X
+
 

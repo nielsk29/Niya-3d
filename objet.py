@@ -13,6 +13,8 @@ def CreerListeAngleOBJ(listeObjet):
     minAngle = (glb.playerAngle-glb.angleRegard)%glb.pi2
     maxAngle = (glb.playerAngle+glb.angleRegard)%glb.pi2
     nb = 0
+    for x in range(len(glb.statusMonstre)):
+        glb.statusMonstre[x][0] = False
     for element in glb.Carte:
         if element == "2":
             long = 100
@@ -93,6 +95,7 @@ def calculAngleObj(diffX,diffY):
 def drawOBJ(i,longRayon,angleRay,listeAngleOBJ, penteRay,posRayX, posRayY):
     penteRay = -penteRay
     nb=0
+    debut = time.time()
     for element in listeAngleOBJ:
         angleMin = element[0]
         angleMax = element[1]
@@ -103,8 +106,9 @@ def drawOBJ(i,longRayon,angleRay,listeAngleOBJ, penteRay,posRayX, posRayY):
             if angleRay > angleMin and angleRay < angleMax:
                 saveOBJ(element, penteRay, longRayon, angleRay,i,nb)
         nb+=1
-
+    glb.process3 += time.time() - debut
 def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
+
     if element[3][0] == element[2][0] :
         penteOBJ = (element[3][1] - element[2][1]) / (element[3][0] - element[2][0]+0.01)
     else:
@@ -126,7 +130,7 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
         # Ximage = RectLarg * imgX / reduction
 
         posYOBJ = glb.screenY / 2 - reduction / glb.listeParametreObjet[element[4]][1]
-        if posYOBJ<glb.screenY and distanceOBJ>20:
+        if posYOBJ<glb.screenY and distanceOBJ>40:
 
             #image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
             maxImage = len(glb.listeImageOBJ[element[4]])-1
@@ -200,7 +204,7 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
             glb.listeRond.append((IntersectionX * glb.minimap / glb.screenX, IntersectionY * glb.minimap / glb.screenY))
 """
 def drawObjet2d():
-    debut = time.time()
+
     liste = sorted(glb.objet2d,key=lambda y: y[0], reverse=True)
     for objet in liste:
             glb.screen.blit(objet[1][0],objet[1][1])

@@ -60,7 +60,7 @@ Carte = ("111111111111111111111"#0
          "111111111111111111111")#20
          #;1;3;5;7;9;1;3;5;7;9;
 nbPorte = Carte.count('2')
-listeObjet = [[1, 350, 150,0],  [1, 1950, 1850,0],  [5, 550, 350,0]]        # liste emplacement objet sous forme (objet,posX,posY)
+listeObjet = [[1, 350, 150,0],[1, 400, 150,0],[1, 300, 150,0],  [1, 1950, 1850,0],  [5, 550, 350,0]]        # liste emplacement objet sous forme (objet,posX,posY)
 listeMonstre = [[0, 150, 1350,0 ],  [0, 850, 1350,0 ],
                [0, 150, 1950,0 ],  [0, 350, 1650,0 ],  [0, 350, 1150,0 ],
                [0, 650, 950,0 ],  [0, 1750, 550,0 ],  [0, 1850, 750,0 ],
@@ -70,7 +70,7 @@ listeBall = []
 statusPorte=[]
 for element in Carte:
     if element=="2":
-        statusPorte.append([0,False,False,False])
+        statusPorte.append([0,False,False,False])  # [ajout position, si on peut passer, en animation, entrain d'être fermé]
     else:
         statusPorte.append([0,True,False,False])
 sizeMmap=int(screenX/100)  # taille carré minimap
@@ -107,7 +107,8 @@ ballesimg = pygame.image.load("image/balles.png")
 murPorte = pygame.image.load("image/cotePorte.png")
 OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.wav")
 CloseDoorSound = pygame.mixer.Sound("sound/doorClose.wav")
-murBrique = pygame.image.load("image/wall_bricks4.jpg")  # image des murs
+murBrique = pygame.image.load("image/wall.png")  # image des murs
+
 viseur = pygame.image.load("image/viseur.png")
 posViseur = ((screenX-viseur.get_width())/2,(screenY-viseur.get_height())/2)
 gunImage = [pygame.image.load("image/gun.gif")]*17
