@@ -60,7 +60,7 @@ Carte = ("111111111111111111111"#0
          "111111111111111111111")#20
          #;1;3;5;7;9;1;3;5;7;9;
 nbPorte = Carte.count('2')
-listeObjet = [[1, 350, 150,0],[1, 400, 150,0],[1, 300, 150,0],  [1, 1950, 1850,0],  [5, 550, 350,0]]        # liste emplacement objet sous forme (objet,posX,posY)
+listeObjet = [[1, 350, 150,0],  [1, 1950, 1850,0],  [5, 550, 350,0]]        # liste emplacement objet sous forme (objet,posX,posY)
 listeMonstre = [[0, 150, 1350,0 ],  [0, 850, 1350,0 ],
                [0, 150, 1950,0 ],  [0, 350, 1650,0 ],  [0, 350, 1150,0 ],
                [0, 650, 950,0 ],  [0, 1750, 550,0 ],  [0, 1850, 750,0 ],
@@ -85,13 +85,14 @@ afficherMap=False  # boolean true si la minimap est affiché
 process = 1  # temps fps
 process2 = 0
 process3 = 0
+touche = [True,True]
 pygame.mouse.set_visible(False)
 listeParametreObjet = [(50,2.50, 100,100), #Monstre
-                       (30,-1, 40,1000), #Kit de soin
+                       (20,-0.75, 25,1000), #Kit de soin
                        (100,2, 110,1000), #Porte
                        (100,2, 110,1000), #Porte à l'envers
                        (10,3, 13,1000), # Balle monstre
-                       (30,-1, 40,1000)]  #Munitions
+                       (20,-0.5, 20,1000)]  #Munitions
                         #(largeur sur map, coeff hauteur, coeff taille, )
 vieMonstre = []
 statusMonstre = []
@@ -105,35 +106,41 @@ nbballes = 30
 playerVie = 100
 ballesimg = pygame.image.load("image/balles.png")
 murPorte = pygame.image.load("image/cotePorte.png")
+injuredSound = pygame.mixer.Sound("sound/injured.wav")
 OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.wav")
 CloseDoorSound = pygame.mixer.Sound("sound/doorClose.wav")
 murBrique = pygame.image.load("image/wall.png")  # image des murs
+armeStatus = [0,False,False,False,1]  #[arme, animation, tirer, toucher, frame]
+armeImage = [[pygame.image.load("image/gun.gif")]*17,[pygame.image.load("image/poing/frame-1.gif")]*4]
+armeTaille = [[(int(armeImage[0][0].get_width()*screenX/2000),int(armeImage[0][0].get_height()*screenY/1000))]*12,
+              [(int(armeImage[1][0].get_width()*screenX/400),int(armeImage[1][0].get_height()*screenY/200))]*4]
+armeParrametre = [[10,1.25,1000000,1,15, pygame.mixer.Sound("sound/gunSound.wav")],
+                  [4,0.5,100,0,25, pygame.mixer.Sound("sound/punch.wav")]]
+                #[nbFrame, avancement de chaque frame en animation, distMax à laquel on peut toucher, son quand on appuie]
 
 viseur = pygame.image.load("image/viseur.png")
 posViseur = ((screenX-viseur.get_width())/2,(screenY-viseur.get_height())/2)
-gunImage = [pygame.image.load("image/gun.gif")]*17
-gunSound = pygame.mixer.Sound("sound/gunSound.wav")
+
+
 hitDemonSound = pygame.mixer.Sound("sound/HitDemon.wav")
 ammoSound = pygame.mixer.Sound("sound/ammo.wav")
 medkitSound = pygame.mixer.Sound("sound/medkit.wav")
 
+
 hitDemonSound.set_volume(0.3)
-gunSound.set_volume(0.3)
+injuredSound.set_volume(0.5)
 OpenDoorSound.set_volume(0.3)
 CloseDoorSound.set_volume(0.3)
+posArme = [[(screenX/2-armeTaille[0][0][0]/2,screenY-armeTaille[0][0][1])]*12, [(screenX*3/4-armeTaille[1][0][0]/2,screenY-armeTaille[1][0][1])]*4]
 
-tailleGun =(int(gunImage[0].get_width()*screenX/2000),int(gunImage[0].get_height()*screenY/1000))
-posGun = (screenX/2-tailleGun[0]/2,screenY-tailleGun[1])
-gunCurrentFrame = 1
-gunStatus = False
-shoot = False
+
 sang = [pygame.image.load("image/sang.gif")]*12
 sangLongX = sang[0].get_width()
 sangLongY = sang[0].get_height()
 newSangLong = (0,0)
 posSang = (int((screenX-sangLongX)/2),int((screenY-sangLongY)/2))
 sangCurrentFrame = 0
-toucher = False
+nbmedkit = 0
 imageRocket = [pygame.image.load("image/rocket/face.png"),
                pygame.image.load("image/rocket/coteFace.png"),pygame.image.load("image/rocket/coteFaceReverse.png"),
                pygame.image.load("image/rocket/cote.png"),pygame.image.load("image/rocket/coteReverse.png"),

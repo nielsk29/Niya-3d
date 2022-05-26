@@ -8,28 +8,30 @@ import objet
 
 
 def anim():
-    if glb.gunStatus == True and glb.gunCurrentFrame<10:
-        if glb.gunCurrentFrame==4:
-            pygame.mixer.Sound.play(glb.gunSound)
-        glb.gunCurrentFrame += 2
-        glb.shoot = False
+    if glb.armeStatus[1] == True and glb.armeStatus[4]<(glb.armeParrametre[glb.armeStatus[0]][0]-glb.armeParrametre[glb.armeStatus[0]][1]):
+        if glb.armeStatus[4]==0:
+            pygame.mixer.Sound.play(glb.armeParrametre[glb.armeStatus[0]][5])
+        glb.armeStatus[4] += glb.armeParrametre[glb.armeStatus[0]][1]
+        glb.armeStatus[2] = False
     else :
-        glb.gunCurrentFrame = 0
-        glb.shoot = False
-        glb.gunStatus = False
-    if glb.toucher and glb.sangCurrentFrame<10:
+        glb.armeStatus[4] = 0
+        glb.armeStatus[2] = False
+        glb.armeStatus[1] = False
+    if glb.armeStatus[3] and glb.sangCurrentFrame<10:
         glb.sangCurrentFrame += 2
         newFrame = pygame.transform.scale(glb.sang[glb.sangCurrentFrame],glb.newSangLong)
         glb.screen.blit(newFrame,glb.posSang)
     else:
         glb.sangCurrentFrame = 0
-        glb.toucher = False
+        glb.armeStatus[3] = False
     nb=0
     for element in glb.lObjAnim:
         frame = glb.listeMonstre[element][3]
         if frame<10:
             glb.listeMonstre[element][3] += 0.2
         else:
+            if random.choice([False,False,False,True]):
+                glb.listeObjet.append([random.choice([1,5]),glb.listeMonstre[element][1]-5,glb.listeMonstre[element][2]-5,0])
             del glb.lObjAnim[nb]
     nb=0
     for element in glb.statusPorte:
@@ -61,8 +63,8 @@ def anim():
         cosBalle =  math.cos(element[4])
         sinBalle =  math.sin(element[4])
         anglePlayer = objet.calculAngleObj(element[1]-glb.playerX, element[2]-glb.playerY)
-        glb.listeBall[nb][1] =glb.listeBall[nb][1]-cosBalle*30
-        glb.listeBall[nb][2] =glb.listeBall[nb][2]-sinBalle*30
+        glb.listeBall[nb][1] =glb.listeBall[nb][1]-cosBalle*20
+        glb.listeBall[nb][2] =glb.listeBall[nb][2]-sinBalle*20
         ligne = int(glb.listeBall[nb][2] / glb.rectSizeY)
         col = int(glb.listeBall[nb][1] / glb.rectSizeX)
         carre = ligne * glb.carteSize[0] + col
@@ -71,7 +73,6 @@ def anim():
             reverse = anglePlayer < element[4]
         else :
             reverse = anglePlayer > element[4]
-        print(anglePlayer,element[4])
         if glb.pi8*9 > diffAngle > glb.pi8*7:
             glb.listeBall[nb][3] = 0
         if glb.pi8*7 > diffAngle > glb.pi8*5 or glb.pi8*11 > diffAngle > glb.pi8*9:
@@ -82,12 +83,11 @@ def anim():
             glb.listeBall[nb][3] = 5 + reverse
         if glb.pi8 > diffAngle or glb.pi8*15 < diffAngle:
             glb.listeBall[nb][3] = 7
-        print(glb.listeBall[nb][3])
-
         if (abs(element[1]-glb.playerX)<10 and abs(element[2]-glb.playerY)<10) \
                 or (abs(glb.playerX - (element[1]+cosBalle*20)) < 10 and abs(glb.playerY - (element[2]+sinBalle*20)) < 10) \
                 or (abs(glb.playerX - (element[1]+cosBalle*10)) < 10 and abs(glb.playerY - (element[2]+sinBalle*10)) < 10) :
             glb.playerVie -= 30
+            pygame.mixer.Sound.play(glb.injuredSound)
             del glb.listeBall[nb]
         elif glb.Carte[carre]=="1":
             del glb.listeBall[nb]
@@ -100,7 +100,7 @@ def anim():
                 diffTemps = time.time()-element[2]
                 if diffTemps>element[4]:
                     glb.statusMonstre[nb][1] = True
-                    glb.statusMonstre[nb][4] = random.randint(5,10)
+                    glb.statusMonstre[nb][4] = random.randint(2,6)
                     glb.statusMonstre[nb][2] = time.time()
             if glb.statusMonstre[nb][1]:
                 frame = glb.listeMonstre[nb][3]
@@ -127,11 +127,5 @@ def anim():
                 glb.ammoSound.play()
                 glb.nbballes += random.randint(10, 25)
                 del glb.listeObjet[nb]
-        if element[0] == 1:
-            if abs(glb.playerX - element[1]) < 10 and abs(glb.playerY - element[2]) < 10:
-                glb.medkitSound.play()
-                glb.playerVie += random.randint(10, 25)
-                if glb.playerVie > 100:
-                    glb.playerVie = 100
-                del glb.listeObjet[nb]
+
         nb += 1

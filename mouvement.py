@@ -1,6 +1,9 @@
 import globalVariable as glb
 import pygame
 import math
+import objet
+import sys
+
 
 def regard():
     mousex = pygame.mouse.get_pos()
@@ -60,23 +63,65 @@ def zqsd():
         if glb.Carte[playerCarre[1]]!="1" and glb.Carte[playerCarre[0]]!="1" and glb.statusPorte[playerCarre[1]][1] and glb.statusPorte[playerCarre[0]][1]:
             glb.playerX -= math.cos(glb.playerAngle) * glb.vitesse *glb.varVitesse
             glb.playerY -= math.sin(glb.playerAngle) * glb.vitesse *glb.varVitesse
-    if keys[pygame.K_TAB]:  # Si la touche "TAB" est pressé
-
-            glb.afficherMap = not glb.afficherMap  # on inverse le boléen qui permet d'afficher la Minimap
-    if keys[pygame.K_e]:
-        signeCos = math.copysign(1, math.cos(glb.playerAngle))
-        signeSin = math.copysign(1, math.sin(glb.playerAngle))
-        playerCol = int((glb.playerX - signeCos * 75) / glb.rectSizeX)
-        playerLigne = int((glb.playerY - signeSin * 75) / glb.rectSizeY)
-        curentLigne = int(glb.playerY / glb.rectSizeY)
-        curentCol = int(glb.playerX / glb.rectSizeX)
-        playerCarre = (playerLigne * glb.carteSize[0] + curentCol, curentLigne * glb.carteSize[0] + playerCol, curentLigne * glb.carteSize[0] + curentCol)
-        if glb.Carte[playerCarre[2]] != "2":
-            if glb.Carte[playerCarre[1]] == "2" :
-                glb.statusPorte[playerCarre[1]][2] = True
-            elif glb.Carte[playerCarre[0]] == "2" :
-                glb.statusPorte[playerCarre[0]][2] = True
     if keys[pygame.K_LSHIFT]:
         glb.varVitesse = 1.5
     else :
         glb.varVitesse = 1
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                glb.exit = True
+                pygame.quit()                                # Si on quitte le jeu
+                sys.exit()
+            if event.key == pygame.K_TAB:  # Si la touche "TAB" est pressé
+
+                glb.afficherMap = not glb.afficherMap  # on inverse le boléen qui permet d'afficher la Minimap
+            if event.key == pygame.K_e:
+                signeCos = math.copysign(1, math.cos(glb.playerAngle))
+                signeSin = math.copysign(1, math.sin(glb.playerAngle))
+                playerCol = int((glb.playerX - signeCos * 75) / glb.rectSizeX)
+                playerLigne = int((glb.playerY - signeSin * 75) / glb.rectSizeY)
+                curentLigne = int(glb.playerY / glb.rectSizeY)
+                curentCol = int(glb.playerX / glb.rectSizeX)
+                playerCarre = (playerLigne * glb.carteSize[0] + curentCol, curentLigne * glb.carteSize[0] + playerCol,
+                               curentLigne * glb.carteSize[0] + curentCol)
+                if glb.Carte[playerCarre[2]] != "2":
+                    if glb.Carte[playerCarre[1]] == "2":
+                        glb.statusPorte[playerCarre[1]][2] = True
+                    elif glb.Carte[playerCarre[0]] == "2":
+                        glb.statusPorte[playerCarre[0]][2] = True
+                for obj in range(len(glb.listeObjet)):
+                    diffx = glb.listeObjet[obj][1] - glb.playerX
+                    diffy = glb.listeObjet[obj][2] - glb.playerY
+                    if abs(diffx) < 100 and abs(diffy) < 100:
+                        if (objet.calculAngleObj(diffx, diffy) - glb.playerAngle) < (glb.pi / 4):
+                            if glb.listeObjet[obj][0]==1:
+                                if glb.nbmedkit < 3:
+                                    glb.nbmedkit += 1
+                                    glb.medkitSound.play()
+                                    del glb.listeObjet[obj]
+                                    break
+                            elif glb.listeObjet[obj][0] == 5:
+                                glb.ammoSound.play()
+                                glb.nbballes += 25
+                                del glb.listeObjet[obj]
+                                break
+            if event.key == pygame.K_c:
+                glb.armeStatus[0] = (glb.armeStatus[0] + 1) % 2
+            if event.key == pygame.K_t:
+                if glb.nbmedkit > 0:
+                    glb.nbmedkit -= 1
+                    glb.playerVie += 30
+                    if glb.playerVie > 100:
+                        glb.playerVie = 100
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button ==1 and glb.armeStatus[1] == False and (glb.nbballes > 0 or glb.armeParrametre[glb.armeStatus[0]][3]==0):
+            glb.nbballes -= glb.armeParrametre[glb.armeStatus[0]][3]
+            glb.armeStatus[2] = True
+            glb.armeStatus[1] = True
+        if event.type == pygame.MOUSEMOTION:
+            regard()
+        if event.type == pygame.QUIT:
+            print(glb.maxlong)
+            pygame.quit()                                # Si on quitte le jeu
+            sys.exit()
+

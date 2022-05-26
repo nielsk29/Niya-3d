@@ -130,7 +130,7 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
         # Ximage = RectLarg * imgX / reduction
 
         posYOBJ = glb.screenY / 2 - reduction / glb.listeParametreObjet[element[4]][1]
-        if posYOBJ<glb.screenY and distanceOBJ>40:
+        if posYOBJ<glb.screenY and distanceOBJ>20:
 
             #image = glb.listeDiffImageOBJ[element[4]][int(reduction)]
             maxImage = len(glb.listeImageOBJ[element[4]])-1
@@ -144,12 +144,13 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
             posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /element[6])
             if element[4]==0:
                 glb.statusMonstre[nbMonstre][0] = True
-                if (glb.millieuX-glb.RectLarg)<(glb.RectLarg * i)<(glb.millieuX+glb.RectLarg) and glb.shoot and glb.vieMonstre[nbMonstre]>0:
+                if (glb.millieuX-glb.RectLarg)<(glb.RectLarg * i)<(glb.millieuX+glb.RectLarg) and glb.armeStatus[2] and glb.vieMonstre[nbMonstre]>0 and distanceOBJ<glb.armeParrametre[glb.armeStatus[0]][2]:
                     glb.newSangLong = (int(reduction*2), int((reduction*2)* (glb.sangLongY/glb.sangLongX)))
                     glb.posSang = (glb.millieuX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
-                    glb.toucher = True
+                    glb.armeStatus[3] = True
                     pygame.mixer.Sound.play(glb.hitDemonSound)
-                    glb.vieMonstre[nbMonstre] -= 10
+                    glb.vieMonstre[nbMonstre] -= glb.armeParrametre[glb.armeStatus[0]][4]
+                    print(glb.vieMonstre[nbMonstre])
                     if glb.vieMonstre[nbMonstre]<=0:
                         glb.listeMonstre[nbMonstre][3] = 0
                         glb.lObjAnim.append(nbMonstre)

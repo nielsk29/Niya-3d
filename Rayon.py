@@ -79,6 +79,7 @@ def car_affine(pente,cosAngle,sinAngle,diffPiSur2,posX, posY,signCos,signSin):  
     debut = time.time()
     if diffPiSur2<0.0001 or diffPiSur2>(glb.pi/2 - 0.0001 ):  # si la pente risque d'être infini ou égal à 0
         return 0,0,0,False  # termine la fonction pour calculer le rayon pixel par pixel
+
     def f_affine(x):  # création de la fonction affine du rayon avec sa pente
         return pente*x
     if signCos[1]:  # si le cosinus de l'angle du rayon est négatif ça veut dire que la prochaine frontière qui peut toucher si elle est sur perpendiculaire à l'axe Y est plus petite que la position X actuelle du rayon

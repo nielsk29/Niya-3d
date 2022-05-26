@@ -26,36 +26,12 @@ def f_all(murBrique):  # fonction qui regroupe tout pour créer une image
     if glb.afficherMap:  # pour savoir si la MiniMap doit être affiché
         Map2d.drawMap2D(glb.sizeMmap, glb.sizeMmap)  # utilise la fonction qui créer la MiniMap
 
-    textFPS = glb.font.render(str(int(1/glb.process)), True,(0,0,0)) # créer l'image du chiffre des fps
-    temps3d = glb.font.render(str(glb.playerVie), True, (0, 0, 0))
-    frame = glb.font.render(str(glb.process), True,(0,0,0))
-    textpro3 = glb.font.render(str(glb.process3), True,(0,0,0))
-    glb.screen.blit(textFPS, (10, 30))
-    glb.screen.blit(glb.gunImage[math.floor(glb.gunCurrentFrame)], glb.posGun)
-    glb.screen.blit(glb.viseur,glb.posViseur)
-    glb.screen.blit(frame,(10,100)) # affiche l'image des FPS
-    glb.screen.blit(temps3d, (10, 170))
-    glb.screen.blit(textpro3, (10, 240))
+
+    #glb.screen.blit(textpro3, (10, 240))
 
 f_all(glb.murBrique)  # créer la 1ère image
 while True:  # boucle infinie jusqu'a qu'on quitte le jeu
     debut = time.time()  # debut du temps pour calculer les fps
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                glb.exit = True
-                pygame.quit()                                # Si on quitte le jeu
-                sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button ==1 and glb.gunStatus == False and glb.nbballes > 0:
-            glb.nbballes -= 1
-            glb.shoot = True
-            glb.gunStatus = True
-        if event.type == pygame.MOUSEMOTION:
-            mouvement.regard()
-        if event.type == pygame.QUIT:
-            print(glb.maxlong)
-            pygame.quit()                                # Si on quitte le jeu
-            sys.exit()
     mouvement.zqsd()
     mapplayerX = glb.playerX * glb.minimap / glb.gameX  # calcul de la position X du joueur dans la MiniMap
     mapplayerY = glb.playerY * glb.minimap / glb.gameY  # calcul de la position Y du joueur dans la MiniMap
