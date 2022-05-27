@@ -34,7 +34,7 @@ nbRay =int(screenX/4) # nombre de rayons qu'on envoie
 RectLarg = math.ceil(screenX/nbRay)  # calcul de la largeur d'un rectangle de l'affichage 3d
 listeRay = []  # liste des rayons qui ce met à jour à chaque image et qui est utilisé pour la minimap
 listeRond = []  # liste des point d'intersection utiliser pour la minimap
-
+prePosY = 0
 
          #0;2;4;6;8;0;2;4;6;8;0
 Carte = ("111111111111111111111"#0
@@ -104,11 +104,14 @@ objet2d=[]  # liste des objets qu'on voit
 maxlong = 0
 nbballes = 30
 playerVie = 100
+imageQuit = pygame.image.load("image/text/quit.png")
+imageRestart = pygame.image.load("image/text/restart.png")
 ballesimg = pygame.image.load("image/balles.png")
 murPorte = pygame.image.load("image/cotePorte.png")
 injuredSound = pygame.mixer.Sound("sound/injured.wav")
 OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.wav")
 CloseDoorSound = pygame.mixer.Sound("sound/doorClose.wav")
+deathSound = pygame.mixer.Sound("sound/Death.wav")
 murBrique = pygame.image.load("image/wall.png")  # image des murs
 armeStatus = [0,False,False,False,1]  #[arme, animation, tirer, toucher, frame]
 armeImage = [[pygame.image.load("image/gun.gif")]*17,[pygame.image.load("image/poing/frame-1.gif")]*4]
@@ -126,7 +129,9 @@ hitDemonSound = pygame.mixer.Sound("sound/HitDemon.wav")
 ammoSound = pygame.mixer.Sound("sound/ammo.wav")
 medkitSound = pygame.mixer.Sound("sound/medkit.wav")
 
-
+deathSound.set_volume(0.3)
+armeParrametre[0][5].set_volume(0.3)
+armeParrametre[1][5].set_volume(0.3)
 hitDemonSound.set_volume(0.3)
 injuredSound.set_volume(0.5)
 OpenDoorSound.set_volume(0.3)

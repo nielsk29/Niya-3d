@@ -6,6 +6,7 @@ import objet
 import math
 
 def rays(murBrique):   # fonction qui envoie les rayons
+    glb.prePosY = 0
     glb.listeRay = []  # liste qui contient les positions des rayons pour les afficher dans la MiniMap
     glb.listeRond = []  # liste qui contient les cercles à afficher sur la MiniMap
     diffRay = (glb.angleRegard*2 / glb.nbRay)   # calcul de la différence d'angle (en radiant) entre chaque rayon envoyé

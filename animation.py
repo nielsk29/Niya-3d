@@ -1,11 +1,15 @@
 import time
 
 import globalVariable as glb
+
+import chargement
 import pygame
 import math
 import random
+import image
+import menu
 import objet
-
+import sys
 
 def anim():
     if glb.armeStatus[1] == True and glb.armeStatus[4]<(glb.armeParrametre[glb.armeStatus[0]][0]-glb.armeParrametre[glb.armeStatus[0]][1]):
@@ -83,11 +87,14 @@ def anim():
             glb.listeBall[nb][3] = 5 + reverse
         if glb.pi8 > diffAngle or glb.pi8*15 < diffAngle:
             glb.listeBall[nb][3] = 7
-        if (abs(element[1]-glb.playerX)<10 and abs(element[2]-glb.playerY)<10) \
-                or (abs(glb.playerX - (element[1]+cosBalle*20)) < 10 and abs(glb.playerY - (element[2]+sinBalle*20)) < 10) \
-                or (abs(glb.playerX - (element[1]+cosBalle*10)) < 10 and abs(glb.playerY - (element[2]+sinBalle*10)) < 10) :
+        if (abs(element[1]-glb.playerX)<25 and abs(element[2]-glb.playerY)<15) \
+                or (abs(glb.playerX - (element[1]+cosBalle*20)) < 15 and abs(glb.playerY - (element[2]+sinBalle*20)) < 15) \
+                or (abs(glb.playerX - (element[1]+cosBalle*10)) < 15 and abs(glb.playerY - (element[2]+sinBalle*10)) < 15) :
             glb.playerVie -= 30
-            pygame.mixer.Sound.play(glb.injuredSound)
+            if glb.playerVie>0:
+                pygame.mixer.Sound.play(glb.injuredSound)
+            else:
+                pygame.mixer.Sound.play(glb.deathSound)
             del glb.listeBall[nb]
         elif glb.Carte[carre]=="1":
             del glb.listeBall[nb]
@@ -111,7 +118,6 @@ def anim():
                 elif math.floor(frame) == 12 and element[3] == False:
                     angle = objet.calculAngleObj((glb.playerX - glb.listeMonstre[nb][1]),
                                                  (glb.playerY - glb.listeMonstre[nb][2]))
-                    print("////")
                     glb.listeBall.append([4, glb.listeMonstre[nb][1], glb.listeMonstre[nb][2], 0, angle])
                     glb.statusMonstre[nb][3] = True
                 elif frame==0 :
@@ -129,3 +135,88 @@ def anim():
                 del glb.listeObjet[nb]
 
         nb += 1
+    if glb.playerVie<=0:
+        mort()
+
+def mort():
+    listeRectNoir = []
+    for i in range(int(glb.screenX/4)):
+        listeRectNoir.append([i*4,0,4,0])
+    verif=True
+    nbTerminer = [False]*len(listeRectNoir)
+    while verif:
+
+        for x in range(len(listeRectNoir)):
+            if listeRectNoir[x][3]<glb.screenY:
+                listeRectNoir[x][3] += random.randint(0,20)
+            else :
+                nbTerminer[x] = True
+            pygame.draw.rect(glb.screen, (50,0,0), listeRectNoir[x])
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    glb.exit = True
+                    pygame.quit()  # Si on quitte le jeu
+                    sys.exit()
+            if event.type == pygame.QUIT:
+                print(glb.maxlong)
+                pygame.quit()  # Si on quitte le jeu
+                sys.exit()
+        glb.temps.tick(60)
+        pygame.display.flip()
+        if not(False in nbTerminer):
+            verif=False
+    pygame.mouse.set_visible(True)
+    verif=True
+    while verif:
+        quitter = glb.screen.blit(glb.imageQuit, ((glb.screenX - glb.imageQuit.get_width()) / 2, glb.screenY * 2 / 3 - glb.imageQuit.get_height() / 2))
+        restart = glb.screen.blit(glb.imageRestart, ((glb.screenX - glb.imageRestart.get_width()) / 2, glb.screenY / 3 - glb.imageRestart.get_height() / 2))
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                print(x,y)
+                print(glb.imageQuit.get_rect())
+                if quitter.collidepoint(x, y):
+                    glb.exit = True
+                    pygame.quit()  # Si on quitte le jeu
+                    sys.exit()
+                if restart.collidepoint(x, y):
+                    chargement.restart()
+                    rest = True
+                    nbTerminer = [False] * len(listeRectNoir)
+                    print(listeRectNoir)
+                    while verif :
+                        image.f_all(glb.murBrique)
+                        menu.afficher()
+                        for x in range(len(listeRectNoir)):
+                            if listeRectNoir[x][3] > 0 :
+                                listeRectNoir[x][3] -= random.randint(0, 30)
+                                print(listeRectNoir[x][3])
+                            else:
+                                nbTerminer[x] = True
+                            pygame.draw.rect(glb.screen, (50, 0, 0), listeRectNoir[x])
+                        for event in pygame.event.get():
+                            if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_ESCAPE:
+                                    glb.exit = True
+                                    pygame.quit()  # Si on quitte le jeu
+                                    sys.exit()
+                            if event.type == pygame.QUIT:
+                                print(glb.maxlong)
+                                pygame.quit()  # Si on quitte le jeu
+                                sys.exit()
+                      #  glb.temps.tick(60)
+                        pygame.display.flip()
+                        if not (False in nbTerminer):
+                            verif = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    glb.exit = True
+                    pygame.quit()  # Si on quitte le jeu
+                    sys.exit()
+            if event.type == pygame.QUIT:
+                print(glb.maxlong)
+                pygame.quit()  # Si on quitte le jeu
+                sys.exit()
+        glb.temps.tick(60)
+        pygame.display.flip()

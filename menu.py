@@ -4,6 +4,7 @@ import pygame
 import globalVariable as glb
 import math
 
+
 def afficher():
     tailleballes = glb.ballesimg.get_height()
     glb.screen.blit(glb.ballesimg , (10, int(glb.screenY- tailleballes)))
@@ -32,3 +33,5 @@ def afficher():
     glb.screen.blit(nbmedkits, (glb.screenX - (tailletxtx+20) ,glb.screenY - (tailletxty+80)))
     pygame.draw.rect(glb.screen, (192, 18, 0), (glb.screenX/2-300,glb.screenY-110, glb.playerVie*600/100, 100))
     pygame.draw.rect(glb.screen, (0, 0, 0), (glb.screenX/2-300,glb.screenY-110,600,100) , 10)
+
+
