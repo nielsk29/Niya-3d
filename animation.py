@@ -118,6 +118,7 @@ def anim():
                 elif math.floor(frame) == 12 and element[3] == False:
                     angle = objet.calculAngleObj((glb.playerX - glb.listeMonstre[nb][1]),
                                                  (glb.playerY - glb.listeMonstre[nb][2]))
+                    glb.shootMonstreSound.play()
                     glb.listeBall.append([4, glb.listeMonstre[nb][1], glb.listeMonstre[nb][2], 0, angle])
                     glb.statusMonstre[nb][3] = True
                 elif frame==0 :

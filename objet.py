@@ -1,7 +1,7 @@
 import time
 
 import pygame
-
+import Rayon
 import globalVariable as glb
 import math
 
@@ -55,6 +55,37 @@ def CreerListeAngleOBJ(listeObjet):
         diffX = element[1] - glb.playerX
         diffY = element[2] - glb.playerY
         angleOBJ = calculAngleObj(diffX, diffY)
+        distanceOBJ = math.sqrt(diffX**2+diffY**2)
+        if element[0] == 0:
+            distanceRay = 0  # variable qui contient la distance entre le joueur et la position du rayon
+            posRayX = glb.playerX  # initialisation de la position X du rayon à la position du joueur
+            posRayY = glb.playerY  # initialisation de la position Y du rayon à la position du joueur
+            pente = -math.tan(angleOBJ)  # calcul de la pente du rayon comme une fonction affine
+            diffPiSur2 = angleOBJ % (glb.pi / 2)  # différence entre l'angle du rayon et pi sur 2 pour savoir si la pente va être trops grande pour les calculs
+            cosAngle = math.cos(angleOBJ)  # calcul du cosinus de l'angle du rayon
+            sinAngle = math.sin(angleOBJ)  # calcul du sinus de l'angle du rayon
+            signCos = (math.copysign(1, cosAngle), cosAngle < 0)
+            signSin = (math.copysign(1, sinAngle), sinAngle < 0)
+            for nbCar in range(glb.diagCarre):  # boucle qui va envoyé le rayon à la prochaine frontière entre les carrés donc le nombre maximal de cette boucle est le diagonal de la carte
+
+                distCarre, posRayX, posRayY, cote = Rayon.car_affine(pente, cosAngle, sinAngle, diffPiSur2, posRayX, posRayY,signCos,signSin)  # utilisation de la fonction qui va calculer où le rayon va toucher la prochaine frontière entre les carrés
+                distanceRay += distCarre  # augmente la distance à laquelle se trouve le rayon du joueur par la distance entre le rayon et la prochaine frontière d'un carré qu'il touche
+
+                colPosRay = math.floor(posRayX / glb.rectSizeX)  # calcul de la colonne à laquelle se trouve le rayon
+                lignePosRay = math.floor(posRayY / glb.rectSizeY)  # calcul de la ligne à laquelle se trouve le rayon
+                carre = int(lignePosRay * glb.carteSize[
+                    0] + colPosRay)  # calcul du carré à laquelle se trouve le rayon grâce à sa colonne et sa ligne
+
+                glb.listeRond.append((int(posRayX * glb.minimap / glb.gameX),
+                                      int(posRayY * glb.minimap / glb.gameY)))  # ajoute un rond à la frontière pour la miniMap
+                if distanceRay > distanceOBJ:
+                    #glb.listeRay.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))  # ajoute le rayon pour la miniMap
+                    glb.statusMonstre[nb - len(listeObjet) - len(glb.listeBall)][0] = True
+                    break
+                elif glb.Carte[carre] == "1" or (glb.Carte[carre] == "2" and glb.statusPorte[carre][1] == False) :  # si le rayon touche un mur
+                    #glb.listeRay.append((posRayX * glb.minimap / glb.gameX,posRayY * glb.minimap / glb.gameY))  # ajoute le rayon pour la miniMap
+                    glb.statusMonstre[nb-len(listeObjet)-len(glb.listeBall)][0] = False
+                    break  # stop la boucle, car le rayon a touché un mur
         cosAngle = math.cos(angleOBJ)
         sinAngle = math.sin(angleOBJ)
         diffX1 = (element[1] - glb.playerX) - (long/2 * sinAngle)
@@ -66,14 +97,10 @@ def CreerListeAngleOBJ(listeObjet):
         #if (angleOBJ1>minAngle or angleOBJ1<maxAngle) and (angleOBJ2>minAngle or angleOBJ2<maxAngle):
         pos1 = (int((glb.playerX+diffX1) * glb.minimap / glb.gameX), int((glb.playerY + diffY1 ) * glb.minimap / glb.gameY))
         pos2 = (int((glb.playerX+diffX2) * glb.minimap / glb.gameX), int((glb.playerY + diffY2) * glb.minimap / glb.gameY))
-        if angleOBJ1<angleOBJ2:
-            listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),(glb.playerX + diffX2, glb.playerY + diffY2), element[0],element[3], long))
-        else:
-            listeAngleOBJ.append((angleOBJ1,angleOBJ2, (glb.playerX + diffX1,glb.playerY + diffY1),(glb.playerX + diffX2,glb.playerY + diffY2),element[0],element[3], long))
+        listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),(glb.playerX + diffX2, glb.playerY + diffY2), element[0],element[3], long))
         glb.listeRond.append(pos1)
         glb.listeRond.append(pos2)
         nb += 1
-
     #print(listeAngleOBJ)
     return listeAngleOBJ
     #print(listeAngleOBJ)
@@ -142,14 +169,13 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
             imgY = image.get_height()
             rectLargbase = math.ceil(abs(glb.listeRectLarge[i] * imgX / reduction))
             posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /element[6])
-            if element[4]==0:
-                glb.statusMonstre[nbMonstre][0] = True
-                if (glb.millieuX-glb.RectLarg)<(math.floor(glb.listeRectPos[i]))<(glb.millieuX+glb.RectLarg) and glb.armeStatus[2] and glb.vieMonstre[nbMonstre]>0 and distanceOBJ<glb.armeParrametre[glb.armeStatus[0]][2]:
+            if element[4]==0 and i == glb.nbRay/2 and glb.armeStatus[2] and glb.vieMonstre[nbMonstre]>0 and distanceOBJ<glb.armeParrametre[glb.armeStatus[0]][2]:
                     glb.newSangLong = (int(reduction*2), int((reduction*2)* (glb.sangLongY/glb.sangLongX)))
                     glb.posSang = (glb.millieuX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
                     glb.armeStatus[3] = True
                     pygame.mixer.Sound.play(glb.hitDemonSound)
                     glb.vieMonstre[nbMonstre] -= glb.armeParrametre[glb.armeStatus[0]][4]
+                    print(glb.vieMonstre[nbMonstre])
                     if glb.vieMonstre[nbMonstre]<=0:
                         glb.listeMonstre[nbMonstre][3] = 0
                         glb.lObjAnim.append(nbMonstre)

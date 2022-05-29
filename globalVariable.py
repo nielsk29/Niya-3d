@@ -124,11 +124,12 @@ armeParrametre = [[10,1.25,1000000,1,15, pygame.mixer.Sound("sound/gunSound.wav"
 viseur = pygame.image.load("image/viseur.png")
 posViseur = ((screenX-viseur.get_width())/2,(screenY-viseur.get_height())/2)
 
-
+shootMonstreSound = pygame.mixer.Sound("sound/shootMonster.wav")
 hitDemonSound = pygame.mixer.Sound("sound/HitDemon.wav")
 ammoSound = pygame.mixer.Sound("sound/ammo.wav")
 medkitSound = pygame.mixer.Sound("sound/medkit.wav")
 
+shootMonstreSound.set_volume(0.8)
 deathSound.set_volume(0.3)
 armeParrametre[0][5].set_volume(0.3)
 armeParrametre[1][5].set_volume(0.3)
