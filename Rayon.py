@@ -13,6 +13,7 @@ def rays(murBrique):   # fonction qui envoie les rayons
     angleRay = (glb.playerAngle-glb.angleRegard)%glb.pi2   # calcul de l'angle du 1er rayon
     listAngleObj = objet.CreerListeAngleOBJ(glb.listeObjet)
     pente2 = -math.tan(angleRay)
+
     for i in range(glb.nbRay):  # boucle de chaque rayon
 
         distanceRay=0  # variable qui contient la distance entre le joueur et la position du rayon

@@ -5,10 +5,12 @@ import sys
 
 def charg():
     for x in range(0,int( glb.screenY/1.5)):
-        sombre = pygame.Surface(( glb.RectLarg, x))
-        sombre.set_alpha(int(abs(x*200/( glb.screenY/1.5)-200)))
-        sombre.fill((0, 0, 0))
-        glb.rectSombre[x] = (sombre,(x,int(abs(x*150/( glb.screenY/1.5)-150)), glb.screenY))
+        for long in range (math.floor(min(glb.listeRectLarge)),math.ceil(max(glb.listeRectLarge)+1),1) :
+            sombre = pygame.Surface(( long, x))
+            sombre.set_alpha(int(abs(x*200/( glb.screenY/1.5)-200)))
+            sombre.fill((0, 0, 0))
+            print(x)
+            glb.rectSombre[x][long] = (sombre,(x,int(abs(x*150/( glb.screenY/1.5)-150)), glb.screenY))
     for x in range(0,12):
         nameFrame = "image/gun/frame-"+str(x+1)+".gif"
         image = pygame.image.load(nameFrame)
@@ -79,3 +81,19 @@ def restart():
     glb.newSangLong = (0, 0)
     glb.sangCurrentFrame = 0
     glb.nbmedkit = 0
+
+
+def calculPlaceRayonSurEcran():
+    listePlaceRayon = []
+    listeXRayon = []
+    diffRay = (glb.angleRegard * 2 / glb.nbRay)
+    angle = -glb.angleRegard
+    for x in range(glb.nbRay):
+        cosAngle = math.tan(angle)
+        pos = math.floor(cosAngle*glb.screenX/2 + glb.screenX/2)
+        listeXRayon.append(pos)
+        angle = angle + diffRay
+    for x in range(len(listeXRayon)-1):
+        listePlaceRayon.append(listeXRayon[x+1]-listeXRayon[x])
+    listePlaceRayon.append(glb.screenX - listeXRayon[-1])
+    return listePlaceRayon, listeXRayon

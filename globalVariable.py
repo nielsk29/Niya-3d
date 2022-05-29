@@ -163,8 +163,7 @@ for x in range(1,11):
 for x in range(1,3):
     nameFrame = "image/cyberdemon/tir/frame-" + str(x) + ".gif"
     listeImageOBJ[0].append(pygame.image.load(nameFrame))
-print(listeImageOBJ[0])
-rectSombre = [0]*screenY
+
 font = pygame.font.SysFont('freesansbold.ttf', 90)  # Police pour les textes
 temps = pygame.time.Clock()  # Initialisation temps
 lenListe = screenX*4
@@ -178,7 +177,12 @@ screen.blit(charg,(screenX/2-300,screenY/2-100))
 pygame.mixer.music.load('sound/music.mp3')
 pygame.mixer.music.play(-1)
 pygame.display.flip()
-
+listeRectLarge, listeRectPos = chargement.calculPlaceRayonSurEcran()
+rectSombre = []
+for x in range (screenY):
+    rectSombre.append([])
+    for i in range(math.ceil(max(listeRectLarge)+1)):
+        rectSombre[x].append(0)
 chargement.charg()
 """for x in range(3500,6000,500):
 

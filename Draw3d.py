@@ -34,7 +34,7 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur, col, ligne):  # fonction q
     imageSizeY = mur.get_height()   # taille Y de l'image de base
     RectY = math.ceil((glb.screenY-RectLong)/2)  # calcul posY du rectangle
     #print(RectY, imageSizeY)
-    rectLargeBase = glb.RectLarg*imageSizeX/RectLong
+    rectLargeBase = glb.listeRectLarge[iray]*imageSizeX/RectLong
 
     if cote ==1:  # si on a touché un mur parallel à l'axe X
         if rayX > glb.playerX:
@@ -52,14 +52,14 @@ def rect3d (iray,rayAngle,nb,cote,rayX,rayY,imageMur, col, ligne):  # fonction q
     else:
         mur = mur.subsurface((Ximage, 0, math.ceil(rectLargeBase), imageSizeY))  # coupe l'image pour avoir que la partie qui nous intéresse
     #screen.blit(mur, (600, 600))
-    mur = pygame.transform.scale(mur, (int(glb.RectLarg), int(RectLong)))
+    mur = pygame.transform.scale(mur, (int(glb.listeRectLarge[iray]), int(RectLong)))
     #mur = pygame.transform.scale(mur, (int(glb.RectLarg), int(RectLong)))   # change la taille de l'image obtenu plus c'est loin plus c'est petit
     #pygame.draw.rect(screen,Grey,(600,600,500,500))
     #screen.blit(mur, (600, 600))
-    glb.screen.blit(mur, (math.floor(iray*glb.RectLarg), RectY))  # affiche l'image
+    glb.screen.blit(mur, (math.floor(glb.listeRectPos[iray]), RectY))  # affiche l'image
     #sombre = pygame.Color(0,0,0)
     debut = time.time()
     if RectLong < (glb.screenY/1.5):
-        glb.screen.blit(glb.rectSombre[int(RectLong)][0], (iray*glb.RectLarg, RectY))
+        glb.screen.blit(glb.rectSombre[math.floor(RectLong)][int(glb.listeRectLarge[iray])][0], (math.floor(glb.listeRectPos[iray]), RectY))
 
     #pygame.draw.rect(screen, (coul, coul, coul), (iray*RectLarg, RectY, RectLarg, RectLong))

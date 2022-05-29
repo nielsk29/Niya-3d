@@ -140,17 +140,16 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
                 image = glb.listeImageOBJ[element[4]][math.floor(element[5])]
             imgX = image.get_width()
             imgY = image.get_height()
-            rectLargbase = math.ceil(abs(glb.RectLarg * imgX / reduction))
+            rectLargbase = math.ceil(abs(glb.listeRectLarge[i] * imgX / reduction))
             posRaySurOBJ = math.ceil(math.sqrt((intersectionX - element[2][0]) ** 2 + (intersectionY - element[2][1]) ** 2) * imgX /element[6])
             if element[4]==0:
                 glb.statusMonstre[nbMonstre][0] = True
-                if (glb.millieuX-glb.RectLarg)<(glb.RectLarg * i)<(glb.millieuX+glb.RectLarg) and glb.armeStatus[2] and glb.vieMonstre[nbMonstre]>0 and distanceOBJ<glb.armeParrametre[glb.armeStatus[0]][2]:
+                if (glb.millieuX-glb.RectLarg)<(math.floor(glb.listeRectPos[i]))<(glb.millieuX+glb.RectLarg) and glb.armeStatus[2] and glb.vieMonstre[nbMonstre]>0 and distanceOBJ<glb.armeParrametre[glb.armeStatus[0]][2]:
                     glb.newSangLong = (int(reduction*2), int((reduction*2)* (glb.sangLongY/glb.sangLongX)))
                     glb.posSang = (glb.millieuX-(glb.newSangLong[0]/2),(glb.screenY-glb.newSangLong[1])/2)
                     glb.armeStatus[3] = True
                     pygame.mixer.Sound.play(glb.hitDemonSound)
                     glb.vieMonstre[nbMonstre] -= glb.armeParrametre[glb.armeStatus[0]][4]
-                    print(glb.vieMonstre[nbMonstre])
                     if glb.vieMonstre[nbMonstre]<=0:
                         glb.listeMonstre[nbMonstre][3] = 0
                         glb.lObjAnim.append(nbMonstre)
@@ -159,10 +158,10 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
                 image = image.subsurface((imgX - rectLargbase, 0, rectLargbase, imgY))
             else:
                 image = image.subsurface((posRaySurOBJ, 0, rectLargbase, imgY))
-            image = glb.pygame.transform.scale(image, (abs(glb.RectLarg), abs(int(reduction))))
+            image = glb.pygame.transform.scale(image, (glb.listeRectLarge[i], abs(int(reduction))))
             # print(imageTauneau,(posRaySurOBJ, 0,RectLarg , imgY))
 
-            glb.objet2d.append((distanceOBJ, (image, (glb.RectLarg * i, posYOBJ))))
+            glb.objet2d.append((distanceOBJ, (image, (math.floor(glb.listeRectPos[i]), posYOBJ))))
 
 """def SaveObjet(ray, penteRay, distanceMur, cosAngle, sinAngle):
     for element in listeObjet:
