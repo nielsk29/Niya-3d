@@ -124,7 +124,7 @@ armeStatus = [0,False,False,False,1]  #[arme, animation, tirer, toucher, frame]
 armeImage = [[pygame.image.load("image/gun.gif")]*17,[pygame.image.load("image/poing/frame-1.gif")]*4]
 armeTaille = [[(int(armeImage[0][0].get_width()*screenX/2000),int(armeImage[0][0].get_height()*screenY/1000))]*12,
               [(int(armeImage[1][0].get_width()*screenX/400),int(armeImage[1][0].get_height()*screenY/200))]*4]
-armeParrametre = [[10,1.25,1000000,1,100, pygame.mixer.Sound("sound/gunSound.wav")],
+armeParrametre = [[10,1.25,1000000,1,15, pygame.mixer.Sound("sound/gunSound.wav")],
                   [4,0.5,100,0,25, pygame.mixer.Sound("sound/punch.wav")]]
                 #[nbFrame, avancement de chaque frame en animation, distMax à laquel on peut toucher, son quand on appuie]
 viseur = pygame.image.load("image/viseur.png")
