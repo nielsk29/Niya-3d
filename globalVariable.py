@@ -54,12 +54,13 @@ Carte = ("111111111111111111111"#0
          "111111211101000000001"#14
          "100000000101000000001"#15
          "100000000101000000001"#16
-         "100000000101000000011"#17
+         "100000000101000000311"#17
          "100000000121111111101"#18
          "100000000100000000001"#19
          "111111111111111111111")#20
          #;1;3;5;7;9;1;3;5;7;9;
 nbPorte = Carte.count('2')
+nbPortal = Carte.count('3')
 listeObjet = [[1, 350, 150,0],  [1, 1950, 1850,0],  [5, 550, 350,0]]        # liste emplacement objet sous forme (objet,posX,posY)
 listeMonstre = [[0, 150, 1350,0 ],  [0, 850, 1350,0 ],
                [0, 150, 1950,0 ],  [0, 350, 1650,0 ],  [0, 350, 1150,0 ],
@@ -68,6 +69,7 @@ listeMonstre = [[0, 150, 1350,0 ],  [0, 850, 1350,0 ],
                [0, 1650, 1250,0 ],  [0, 1550, 1350,0 ],  [0, 1650, 1350,0 ]]
 listeBall = []
 statusPorte=[]
+statutPortal = [False,0]
 for element in Carte:
     if element=="2":
         statusPorte.append([0,False,False,False])  # [ajout position, si on peut passer, en animation, entrain d'être fermé]
@@ -92,10 +94,12 @@ listeParametreObjet = [(50,2.50, 100,100), #Monstre
                        (100,2, 110,1000), #Porte
                        (100,2, 110,1000), #Porte à l'envers
                        (10,3, 13,1000), # Balle monstre
-                       (20,-0.5, 20,1000)]  #Munitions
+                       (20,-0.5, 20,1000),#Munitions
+                       (50,2, 110,1000)]
                         #(largeur sur map, coeff hauteur, coeff taille, )
 vieMonstre = []
 statusMonstre = []
+nbMonstreMort = 0
 lObjAnim = []
 for element in listeMonstre:
     statusMonstre.append([False, False, 0,False,0])  #[visible, animation tir, temps dernier tir, à tirer, attente prochain tir]
@@ -106,6 +110,8 @@ nbballes = 30
 playerVie = 100
 imageQuit = pygame.image.load("image/text/quit.png")
 imageRestart = pygame.image.load("image/text/restart.png")
+imageReprendre = pygame.image.load("image/text/reprendre.png")
+imageQuitter = pygame.image.load("image/text/quitter.png")
 ballesimg = pygame.image.load("image/balles.png")
 murPorte = pygame.image.load("image/cotePorte.png")
 injuredSound = pygame.mixer.Sound("sound/injured.wav")
@@ -113,14 +119,14 @@ OpenDoorSound = pygame.mixer.Sound("sound/doorOpen.wav")
 CloseDoorSound = pygame.mixer.Sound("sound/doorClose.wav")
 deathSound = pygame.mixer.Sound("sound/Death.wav")
 murBrique = pygame.image.load("image/wall.png")  # image des murs
+print(murBrique)
 armeStatus = [0,False,False,False,1]  #[arme, animation, tirer, toucher, frame]
 armeImage = [[pygame.image.load("image/gun.gif")]*17,[pygame.image.load("image/poing/frame-1.gif")]*4]
 armeTaille = [[(int(armeImage[0][0].get_width()*screenX/2000),int(armeImage[0][0].get_height()*screenY/1000))]*12,
               [(int(armeImage[1][0].get_width()*screenX/400),int(armeImage[1][0].get_height()*screenY/200))]*4]
-armeParrametre = [[10,1.25,1000000,1,15, pygame.mixer.Sound("sound/gunSound.wav")],
+armeParrametre = [[10,1.25,1000000,1,100, pygame.mixer.Sound("sound/gunSound.wav")],
                   [4,0.5,100,0,25, pygame.mixer.Sound("sound/punch.wav")]]
                 #[nbFrame, avancement de chaque frame en animation, distMax à laquel on peut toucher, son quand on appuie]
-
 viseur = pygame.image.load("image/viseur.png")
 posViseur = ((screenX-viseur.get_width())/2,(screenY-viseur.get_height())/2)
 
@@ -152,12 +158,20 @@ imageRocket = [pygame.image.load("image/rocket/face.png"),
                pygame.image.load("image/rocket/cote.png"),pygame.image.load("image/rocket/coteReverse.png"),
                pygame.image.load("image/rocket/coteBack.png"),pygame.image.load("image/rocket/coteBackReverse.png"),
                pygame.image.load("image/rocket/Back.png")]
+imagePortal = []
+for x in  range(1,7):
+
+    nameFrame = "image/portal/frame-"+str(x)+".gif"
+    print(nameFrame)
+    imagePortal.append(pygame.image.load(nameFrame))
+print(imagePortal)
 listeImageOBJ = [[pygame.image.load("image/demon.gif")],
                  [pygame.image.load("image/kit.png")],
-                 [pygame.image.load("image/door.png")],
+                 [pygame.image.load("image/door.gif")],
                  [pygame.image.load("image/doorReverse.png")],
                  imageRocket,
-                 [pygame.image.load("image/munitions.png")]]  # image Objet
+                 [pygame.image.load("image/munitions.png")],
+                 imagePortal]  # image Objet
 for x in range(1,11):
     nameFrame = "image/cyberdemon/death/frame-" + str(x) + ".gif"
     listeImageOBJ[0].append(pygame.image.load(nameFrame))
@@ -180,6 +194,7 @@ pygame.mixer.music.play(-1)
 pygame.display.flip()
 listeRectLarge, listeRectPos = chargement.calculPlaceRayonSurEcran()
 rectSombre = []
+pause = False
 for x in range (screenY):
     rectSombre.append([])
     for i in range(math.ceil(max(listeRectLarge)+1)):

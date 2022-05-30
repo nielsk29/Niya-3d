@@ -4,7 +4,7 @@ import pygame
 import Rayon
 import globalVariable as glb
 import math
-
+import sys
 
 
 def CreerListeAngleOBJ(listeObjet):
@@ -16,9 +16,12 @@ def CreerListeAngleOBJ(listeObjet):
     for x in range(len(glb.statusMonstre)):
         glb.statusMonstre[x][0] = False
     for element in glb.Carte:
-        if element == "2":
+        if element == "2" or element == "3":
             long = 100
-            posX = (nb % glb.carteSize[0]) * glb.rectSizeX + glb.rectSizeX / 2 + glb.statusPorte[nb][0]
+            if element == "2":
+                posX = (nb % glb.carteSize[0]) * glb.rectSizeX + glb.rectSizeX / 2 + glb.statusPorte[nb][0]
+            else:
+                 posX = (nb % glb.carteSize[0]) * glb.rectSizeX + glb.rectSizeX / 2
             posY = (nb // glb.carteSize[1]) * glb.rectSizeY + glb.rectSizeY / 2
             diffX = posX - glb.playerX
             diffY = posY - glb.playerY
@@ -36,7 +39,10 @@ def CreerListeAngleOBJ(listeObjet):
                     int((glb.playerY + diffY1) * glb.minimap / glb.gameY))
             pos2 = (int((glb.playerX + diffX2) * glb.minimap / glb.gameX),
                     int((glb.playerY + diffY2) * glb.minimap / glb.gameY))
-            if diffY > 0:
+            if element == "3":
+                listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),
+                                      (glb.playerX + diffX2, glb.playerY + diffY2), 6, glb.statutPortal[1], long))
+            elif diffY > 0:
                 listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),
                                       (glb.playerX + diffX2, glb.playerY + diffY2), 2, 0, long))
             else:
@@ -148,7 +154,7 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
     glb.listeRond.append((int(intersectionX * glb.minimap / glb.gameX), int(intersectionY * glb.minimap / glb.gameX)))
     distanceOBJ = abs(abs(intersectionX - glb.playerX) / math.cos(angleRay))
     if distanceOBJ < longRayon:
-        nbMonstre = nb - len(glb.listeObjet) - len(glb.listeBall) - glb.nbPorte
+        nbMonstre = nb - len(glb.listeObjet) - len(glb.listeBall) - glb.nbPorte - glb.nbPortal
         maxDistance = distanceOBJ
         distanceOBJ = distanceOBJ * math.cos(glb.playerAngle - angleRay)
         reduction = 1200 / distanceOBJ * glb.listeParametreObjet[element[4]][2] * glb.reductionEcran
@@ -178,6 +184,7 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
                     print(glb.vieMonstre[nbMonstre])
                     if glb.vieMonstre[nbMonstre]<=0:
                         glb.listeMonstre[nbMonstre][3] = 0
+                        glb.nbMonstreMort += 1
                         glb.lObjAnim.append(nbMonstre)
 
             if rectLargbase + posRaySurOBJ > imgX:
@@ -188,7 +195,9 @@ def saveOBJ(element,penteRay,longRayon,angleRay,i,nb) :
             # print(imageTauneau,(posRaySurOBJ, 0,RectLarg , imgY))
 
             glb.objet2d.append((distanceOBJ, (image, (math.floor(glb.listeRectPos[i]), posYOBJ))))
-
+        elif element[4]==6 and glb.statutPortal[0]:
+            pygame.quit()  # Si on quitte le jeu
+            sys.exit()
 """def SaveObjet(ray, penteRay, distanceMur, cosAngle, sinAngle):
     for element in listeObjet:
         ray = element[0]

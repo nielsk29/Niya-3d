@@ -3,7 +3,7 @@ import time
 import pygame
 import globalVariable as glb
 import math
-
+import sys
 
 def afficher():
     tailleballes = glb.ballesimg.get_height()
@@ -35,3 +35,32 @@ def afficher():
     pygame.draw.rect(glb.screen, (0, 0, 0), (glb.screenX/2-300,glb.screenY-110,600,100) , 10)
 
 
+def pause():
+    pause = True
+    pygame.draw.rect(glb.screen,(72,2,2),(int(glb.screenX / 6),int(glb.screenY / 8) , int(glb.screenX / 1.5), int(glb.screenY / 1.5)),)
+    pygame.draw.rect(glb.screen,(0,0,0),(int(glb.screenX / 6),int(glb.screenY / 8) , int(glb.screenX / 1.5), int(glb.screenY / 1.5)), 5)
+    tailley = glb.imageQuitter.get_height()
+    taillex = glb.imageQuitter.get_width()
+    quitter = glb.screen.blit(glb.imageQuitter, ((glb.millieuX-int(taillex/2)),int(glb.screenY / 2) - int(tailley*2)))
+    tailley = glb.imageReprendre.get_height()
+    taillex = glb.imageReprendre.get_width()
+    reprendre = glb.screen.blit(glb.imageReprendre, ((glb.millieuX-int(taillex/2)),int(glb.screenY / 2) + int(tailley)))
+    pygame.display.flip()
+    while pause:
+        pygame.mouse.set_visible(True)
+        glb.temps.tick(30)
+        pygame.mixer.pause()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if quitter.collidepoint(x, y):
+                    glb.exit = True
+                    pygame.quit()  # Si on quitte le jeu
+                    sys.exit()
+                if reprendre.collidepoint(x, y):
+                    pause = False
+                    pygame.mouse.set_visible(False)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mouse.set_visible(False)
+                    pause = False

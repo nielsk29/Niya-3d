@@ -125,8 +125,12 @@ def anim():
                     glb.listeMonstre[nb][3] = 11
                 else:
                     glb.listeMonstre[nb][3] += 0.5
-
         nb += 1
+    nb = 0
+    for monstre in glb.listeMonstre:
+        posX = monstre[1]
+        posY = monstre[2]
+        nb+=1
     nb = 0
     for element in glb.listeObjet:
         if element[0] == 5:
@@ -136,6 +140,12 @@ def anim():
                 del glb.listeObjet[nb]
 
         nb += 1
+    if glb.nbMonstreMort == len(glb.listeMonstre):
+        glb.statutPortal[0] = True
+    if glb.statutPortal[0]:
+        glb.statutPortal[1] = (glb.statutPortal[1]+0.5)%5
+    else :
+        glb.statutPortal[1] = 6
     if glb.playerVie<=0:
         mort()
 

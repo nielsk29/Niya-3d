@@ -9,7 +9,6 @@ def charg():
             sombre = pygame.Surface(( long, x))
             sombre.set_alpha(int(abs(x*200/( glb.screenY/1.5)-200)))
             sombre.fill((0, 0, 0))
-            print(x)
             glb.rectSombre[x][long] = (sombre,(x,int(abs(x*150/( glb.screenY/1.5)-150)), glb.screenY))
     for x in range(0,12):
         nameFrame = "image/gun/frame-"+str(x+1)+".gif"
@@ -64,7 +63,8 @@ def restart():
                            (100, 2, 110, 1000),  # Porte
                            (100, 2, 110, 1000),  # Porte à l'envers
                            (10, 3, 13, 1000),  # Balle monstre
-                           (20, -0.5, 20, 1000)]  # Munitions
+                           (20, -0.5, 20, 1000),
+                            (10, 3, 13, 1000)]  # Munitions
     # (largeur sur map, coeff hauteur, coeff taille, )
     glb.vieMonstre = []
     glb.statusMonstre = []

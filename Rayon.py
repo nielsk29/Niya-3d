@@ -1,4 +1,3 @@
-
 import globalVariable as glb  # importation des Variables globals
 import time
 import Draw3d

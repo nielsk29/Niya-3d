@@ -3,6 +3,7 @@ import pygame
 import math
 import objet
 import sys
+import menu
 
 
 def regard():
@@ -70,9 +71,7 @@ def zqsd():
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                glb.exit = True
-                pygame.quit()                                # Si on quitte le jeu
-                sys.exit()
+                menu.pause()
             if event.key == pygame.K_TAB:  # Si la touche "TAB" est pressé
 
                 glb.afficherMap = not glb.afficherMap  # on inverse le boléen qui permet d'afficher la Minimap

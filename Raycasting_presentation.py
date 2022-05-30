@@ -18,7 +18,7 @@ pi=(math.pi // precision) * precision
 playerAngle = 0
 angleRegard = pi/6
 pi2=pi*2
-nbRay = 20
+nbRay = 30
 dist3D = 0
 
 Carte = ("111111111111"
@@ -102,10 +102,10 @@ def rays():
 def rect3d (iray,rayAngle,nb):
     nb = nb * math.cos(playerAngle - rayAngle)
     RectLong = 2000/nb *50
-    RectLarg = math.ceil(screenY/nbRay)
+    RectLarg = screenY/nbRay
     RectY = (screenY-RectLong)/2
     coul=abs((nb*150/1200) - 150)
-    pygame.draw.rect(screen, (coul, coul, coul), (math.floor(screenX+iray*RectLarg), RectY, RectLarg, RectLong))
+    pygame.draw.rect(screen, (coul, coul, coul), (screenX+iray*RectLarg, RectY, RectLarg, RectLong))
 def pixelparpixel(angleRay,i):
     for nb in range(diagonal):
 
@@ -177,7 +177,7 @@ def f_all():
     player()
     rays()
     process = time.time() - debut
-    textAngle = font.render(str(int(nbRay)), True,(0,0,0))
+    textAngle = font.render(str(int(1/process)), True,(0,0,0))
     screen.blit(textAngle,(10,30))
 pygame.init()
 screen = pygame.display.set_mode((screenX*2,screenY))
@@ -211,10 +211,6 @@ while True:
         if Carte[playerCarre]!="1":
             playerX -= math.cos(playerAngle) * 8
             playerY -= math.sin(playerAngle) * 8
-    if keys[pygame.K_KP_PLUS]:
-        nbRay += 1
-    if keys[pygame.K_KP_MINUS]:
-        nbRay -=1
     temps.tick(30)
     pygame.display.flip()
 
