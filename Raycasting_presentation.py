@@ -18,7 +18,7 @@ pi=(math.pi // precision) * precision
 playerAngle = 0
 angleRegard = pi/6
 pi2=pi*2
-nbRay = 30
+nbRay = int(screenX/4)
 dist3D = 0
 
 Carte = ("111111111111"

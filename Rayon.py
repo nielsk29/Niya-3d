@@ -5,7 +5,6 @@ import objet
 import math
 
 def rays(murBrique):   # fonction qui envoie les rayons
-    glb.prePosY = 0
     glb.listeRay = []  # liste qui contient les positions des rayons pour les afficher dans la MiniMap
     glb.listeRond = []  # liste qui contient les cercles à afficher sur la MiniMap
     diffRay = (glb.angleRegard*2 / glb.nbRay)   # calcul de la différence d'angle (en radiant) entre chaque rayon envoyé
@@ -19,7 +18,7 @@ def rays(murBrique):   # fonction qui envoie les rayons
         angleRay=(angleRay +diffRay)%glb.pi2 # angle (en radiant) à laquelle le rayon va être envoyé
         posRayX=glb.playerX  # initialisation de la position X du rayon à la position du joueur
         posRayY=glb.playerY  # initialisation de la position Y du rayon à la position du joueur
-        pente = -math.tan(angleRay) # calcul de la pente du rayon comme une fonction affine
+        pente = -math.tan(angleRay)  # calcul de la pente du rayon comme une fonction affine
         diffPiSur2 = angleRay % (glb.pi / 2)  # différence entre l'angle du rayon et pi sur 2 pour savoir si la pente va être trops grande pour les calculs
         cosAngle = math.cos(angleRay)   # calcul du cosinus de l'angle du rayon
         sinAngle = math.sin(angleRay)   # calcul du sinus de l'angle du rayon
@@ -45,11 +44,11 @@ def rays(murBrique):   # fonction qui envoie les rayons
                 #objet.SaveObjet(i, pente, distanceRay, cosAngle, sinAngle)  # utilise la fonction qui regarde si le rayon à toucher un objet
                 pente2 = pente
                 Draw3d.rect3d(i,angleRay,distanceRay,cote,posRayX,posRayY,murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
-                objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
+                objet.OBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
                 break  # stop la boucle, car le rayon a touché un mur
             if fin:
                 glb.listeRay.append((posRayX * glb.minimap / glb.gameX, posRayY * glb.minimap / glb.gameY))
-                objet.drawOBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
+                objet.OBJ(i, distanceRay, angleRay, listAngleObj, pente, posRayX, posRayY)
                 break  # stop la boucle, car le rayon a touché un mur
 
             if glb.Carte[carre] == "2" and glb.statusPorte[carre][0] == 0:
@@ -72,7 +71,7 @@ def pixelparpixel(angleRay,i, murBrique,pente,listAngleObj,distanceRay):  # fonc
             else:  # sinon ça veut dire qu'on a touché un mur perpendiculaire à l'axe Y
                 cote=2
             Draw3d.rect3d(i, angleRay, nb, cote, posRayX, posRayY, murBrique,colPosRay,lignePosRay)  # Utilise la fonction qui va dessiner le rectangle (avec un bout de l'image de mur) correspondant au rayon
-            objet.drawOBJ(i, nb, angleRay, listAngleObj, pente, posRayX, posRayY)
+            objet.OBJ(i, nb, angleRay, listAngleObj, pente, posRayX, posRayY)
             break  # stop la boucle, car le rayon a touché un mur
 
 

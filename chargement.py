@@ -3,32 +3,38 @@ import pygame
 import math
 import sys
 
-def charg():
-    for x in range(0,int( glb.screenY/1.5)):
-        for long in range (math.floor(min(glb.listeRectLarge)),math.ceil(max(glb.listeRectLarge)+1),1) :
-            sombre = pygame.Surface(( long, x))
-            sombre.set_alpha(int(abs(x*200/( glb.screenY/1.5)-200)))
-            sombre.fill((0, 0, 0))
-            glb.rectSombre[x][long] = (sombre,(x,int(abs(x*150/( glb.screenY/1.5)-150)), glb.screenY))
+def charg():        # fonction pour charger certaine image
+
+    # chargement des rectangle sombre possible en fonction de chaque largeur et longueur possible
+    for x in range(0,int( glb.screenY/1.5)):    #change la longueur du rectangle jusqu'a une longueur à laquel je ne met plus d'effet sombre
+        for long in range (math.floor(min(glb.listeRectLarge)),math.ceil(max(glb.listeRectLarge)+1),1) :    # change la largeur du rectangle du minimum de largeur possilbe au maximum
+            sombre = pygame.Surface(( long, x))  #créer le rectangle
+            sombre.set_alpha(int(abs(x*200/( glb.screenY/1.5)-200)))    #met la tansparance plus la longueur est grande plus la transaparance est élévé
+            sombre.fill((0, 0, 0))   #rempli le rectangle avec du noir
+            glb.rectSombre[x][long] = (sombre,(x,int(abs(x*150/( glb.screenY/1.5)-150)), glb.screenY))  # ajout du rectangle à la liste avec comme indice la longueur puis la largeur
+
+    #chargement frame gun
     for x in range(0,12):
         nameFrame = "image/gun/frame-"+str(x+1)+".gif"
         image = pygame.image.load(nameFrame)
         glb.armeImage[0][x] = pygame.transform.scale(image,glb.armeTaille[0][x])
+
+    #chargement frame sang
     for x in range(0,12):
         nameFrame = "image/sang/frame-"+str(x+1)+".gif"
         image = pygame.image.load(nameFrame)
         glb.sang[x] = pygame.transform.scale(image,(glb.sangLongX,glb.sangLongY))
+
+    #chargment frame poing avec la position du poing
     for x in range(4):
         nameFrame = "image/poing/frame-"+str(x+1)+".gif"
         image = pygame.image.load(nameFrame)
         glb.armeTaille[1][x] = (int(image.get_width()*glb.screenX/400),int(image.get_height()*glb.screenY/200))
         glb.armeImage[1][x] = pygame.transform.scale(image, glb.armeTaille[1][x])
-        if x == 0:
-            glb.posArme[1][x] = (glb.screenX / 3 - glb.armeTaille[1][x][0] / 2, glb.screenY - glb.armeTaille[1][x][1])
-        else:
-            glb.posArme[1][x] = (glb.screenX/ 3 - glb.armeTaille[1][x][0] / 2, glb.screenY - glb.armeTaille[1][x][1])
-    print(glb.armeImage)
+        glb.posArme[1][x] = (glb.screenX / 3 - glb.armeTaille[1][x][0] / 2, glb.screenY - glb.armeTaille[1][x][1])
 
+
+#finction utilisé pour recomancé car remmet toute les variable à leur valleur initial
 def restart():
     glb.playerX = 400  # Position X du joueur
     glb.playerY = 300  # position Y du joueur
@@ -83,17 +89,22 @@ def restart():
     glb.nbmedkit = 0
 
 
+# fonction qui calcul la position de chaque rectangle sur l'écran en fonction de quel rayon affiche ce rectangle
+# pour ce faire on fait semblant qu'il y a un mur qui fait la taille de l'écran devant notre personage puis on tire
+# tous les rayons avec le 1er qui touche le début du mur et en fonction d'où il atterrisse on à leur position
+# par exemple si le rayon 15 arrive à une distance de 70 pixels du debut du mur alors on met son rectangle à
+# une position X de 70
 def calculPlaceRayonSurEcran():
-    listePlaceRayon = []
-    listeXRayon = []
-    diffRay = (glb.angleRegard * 2 / glb.nbRay)
-    angle = -glb.angleRegard
-    for x in range(glb.nbRay):
-        cosAngle = math.tan(angle)
-        pos = math.floor(cosAngle*glb.screenX/2 + glb.screenX/2)
+    listePlaceRayon = []  # initialisation de la liste qui va avoir la largeur de chaque rectangle
+    listeXRayon = []  # initialisation de la liste qui va avoir la pos X de chaque rectangle
+    diffRay = (glb.angleRegard * 2 / glb.nbRay)  # diff de radiant entre chaque rayon
+    angle = -glb.angleRegard  # angle de départ
+    for x in range(glb.nbRay):      # boucle de tous les rayons
+        tanAngle = math.tan(angle)  # tan de l'angle
+        pos = math.floor(tanAngle*glb.millieuX + glb.millieuX)  # position du rayon
         listeXRayon.append(pos)
-        angle = angle + diffRay
-    for x in range(len(listeXRayon)-1):
-        listePlaceRayon.append(listeXRayon[x+1]-listeXRayon[x])
-    listePlaceRayon.append(glb.screenX - listeXRayon[-1])
+        angle = angle + diffRay  # augmentation du rayon
+    for x in range(len(listeXRayon)-1):  # boucle pour calculer la largeur de chaque rectangle
+        listePlaceRayon.append(listeXRayon[x+1]-listeXRayon[x])  # calcul de la largeur avec la différence entre la pos et la pos du prochain rectangle
+    listePlaceRayon.append(glb.screenX - listeXRayon[-1])  # ajout de la dernière largeur car il n'y a pas de rectangle après pour comparer donc on prend la largeur de l'écran
     return listePlaceRayon, listeXRayon
