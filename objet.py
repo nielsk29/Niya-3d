@@ -17,7 +17,7 @@ def CreerListeAngleOBJ(listeObjet):
                 posX = (nb % glb.carteSize[0]) * glb.rectSizeX + glb.rectSizeX / 2 + glb.statusPorte[nb][0]
             else:
                  posX = (nb % glb.carteSize[0]) * glb.rectSizeX + glb.rectSizeX / 2  # calcul pos X
-            posY = (nb // glb.carteSize[1]) * glb.rectSizeY + glb.rectSizeY / 2  # calcul pos Y
+            posY = (nb // glb.carteSize[0]) * glb.rectSizeY + glb.rectSizeY / 2  # calcul pos Y
             diffX = posX - glb.playerX  # différence X entre le joueur et l'objet
             diffY = posY - glb.playerY  # différence Y entre le joueur et l'objet
             angleOBJ = calculAngleObj(diffX, diffY)   # calcul de l'angle entre le joueur est l'objet
@@ -28,10 +28,10 @@ def CreerListeAngleOBJ(listeObjet):
             diffY2 = (posY - glb.playerY)  # calcul pos Y max
             angleOBJ1 = calculAngleObj(diffX1, diffY1) # angle entre le joueur et la pos min de l'objet
             angleOBJ2 = calculAngleObj(diffX2, diffY2) # angle entre le joueur et la pos max de l'objet
-            pos1 = (int((glb.playerX + diffX1) * glb.minimap / glb.gameX),
-                    int((glb.playerY + diffY1) * glb.minimap / glb.gameY))  # position pour minimap
-            pos2 = (int((glb.playerX + diffX2) * glb.minimap / glb.gameX),
-                    int((glb.playerY + diffY2) * glb.minimap / glb.gameY))
+            pos1 = (int((glb.playerX + diffX1) * glb.minimap[0] / glb.gameX),
+                    int((glb.playerY + diffY1) * glb.minimap[1] / glb.gameY))  # position pour minimap
+            pos2 = (int((glb.playerX + diffX2) * glb.minimap[0] / glb.gameX),
+                    int((glb.playerY + diffY2) * glb.minimap[1] / glb.gameY))
             if element == "3": # si c'est un portail
                 listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),
                                       (glb.playerX + diffX2, glb.playerY + diffY2), 6, glb.statutPortal[1], long))
@@ -77,8 +77,8 @@ def CreerListeAngleOBJ(listeObjet):
                 lignePosRay = math.floor(posRayY / glb.rectSizeY)  # calcul de la ligne à laquelle se trouve le rayon
                 carre = int(lignePosRay * glb.carteSize[0] + colPosRay)  # calcul du carré à laquelle se trouve le rayon grâce à sa colonne et sa ligne
 
-                glb.listeRond.append((int(posRayX * glb.minimap / glb.gameX),
-                                      int(posRayY * glb.minimap / glb.gameY)))  # ajoute un rond à la frontière pour la miniMap
+                glb.listeRond.append((int(posRayX * glb.minimap[0] / glb.gameX),
+                                      int(posRayY * glb.minimap[1] / glb.gameY)))  # ajoute un rond à la frontière pour la miniMap
                 if distanceRay > distanceOBJ: # si le rayon est plus grand que la distance entre le joueur et le monstre alors on est dans son chant de vision
                     glb.statusMonstre[nb - len(listeObjet) - len(glb.listeBall)][0] = True  # on met dans son status un True
                     break
@@ -93,8 +93,8 @@ def CreerListeAngleOBJ(listeObjet):
         diffY2 = (element[2] - glb.playerY) - (long/2 * cosAngle)  # calcul pos Y max
         angleOBJ1 = calculAngleObj(diffX1, diffY1)  # angle entre le joueur et la pos min de l'objet
         angleOBJ2 = calculAngleObj(diffX2, diffY2)  # angle entre le joueur et la pos max de l'objet
-        pos1 = (int((glb.playerX+diffX1) * glb.minimap / glb.gameX), int((glb.playerY + diffY1 ) * glb.minimap / glb.gameY))  # position pour minimap
-        pos2 = (int((glb.playerX+diffX2) * glb.minimap / glb.gameX), int((glb.playerY + diffY2) * glb.minimap / glb.gameY))  # position pour minimap
+        pos1 = (int((glb.playerX+diffX1) * glb.minimap[0] / glb.gameX), int((glb.playerY + diffY1 ) * glb.minimap[1] / glb.gameY))  # position pour minimap
+        pos2 = (int((glb.playerX+diffX2) * glb.minimap[0] / glb.gameX), int((glb.playerY + diffY2) * glb.minimap[1] / glb.gameY))  # position pour minimap
 
         listeAngleOBJ.append((angleOBJ1, angleOBJ2, (glb.playerX + diffX1, glb.playerY + diffY1),(glb.playerX + diffX2, glb.playerY + diffY2), element[0],element[3], long))
         # on ajoute à la liste: (angleMin, angleMax, posMin, posMax, indice image objet, frame, longueur)
@@ -144,7 +144,7 @@ def drawOBJ(element,penteRay,longRayon,angleRay,i,nb) :
     departRay = glb.playerY - penteRay * glb.playerX  # calcul du départ de la fonction du rayon donc quand le x = 0
     intersectionX = (departRay - departOBJ) / (penteOBJ - penteRay)  # calcul de la pos X de l'intersection entre les deux fonction
     intersectionY = penteRay * intersectionX + departRay  # calcul de la pos Y de l'intersection entre les deux fonction
-    glb.listeRond.append((int(intersectionX * glb.minimap / glb.gameX), int(intersectionY * glb.minimap / glb.gameX)))
+    glb.listeRond.append((int(intersectionX * glb.minimap[0] / glb.gameX), int(intersectionY * glb.minimap[1] / glb.gameY)))
     distanceOBJ = abs(abs(intersectionX - glb.playerX) / math.cos(angleRay))  # calcul la distance entre le joueur est l'intersection
     if distanceOBJ < longRayon: # si la distance est plus petite que la longueur du rayon donc la disatnce jusqu'au mur alors on dessine sur l'écran le rectangle de l'objet
         nbMonstre = nb - len(glb.listeObjet) - len(glb.listeBall) - glb.nbPorte - glb.nbPortal  # indice dans la liste des monstres

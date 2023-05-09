@@ -3,11 +3,11 @@ import pygame
 import math
 
 def drawMap2D(sizeX,sizeY):
-    pygame.draw.rect(glb.screen, (0, 0, 0), pygame.Rect(0, 0, sizeX *glb.carteSize[1], sizeY * glb.carteSize[0]))
-    glb.mapPlayerX = glb.playerX * glb.minimap / glb.gameX
-    glb.mapPlayerY = glb.playerY * glb.minimap / glb.gameY
-    for y in range(glb.carteSize[0]):
-        for x in range(glb.carteSize[1]):
+    pygame.draw.rect(glb.screen, (0, 0, 0), pygame.Rect(0, 0, sizeX *glb.carteSize[0], sizeY * glb.carteSize[1]))
+    glb.mapPlayerX = glb.playerX * glb.minimap[0] / glb.gameX
+    glb.mapPlayerY = glb.playerY * glb.minimap[1] / glb.gameY
+    for y in range(glb.carteSize[1]):
+        for x in range(glb.carteSize[0]):
             rect = y*glb.carteSize[0]+x
             rectX = x * sizeX
             rectY = y * sizeY

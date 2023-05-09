@@ -17,7 +17,7 @@ def afficher():
     glb.screen.blit(textFPS, (10, 30))
     debut = time.time()
     glb.screen.blit(glb.armeImage[glb.armeStatus[0]][math.floor(glb.armeStatus[4])], glb.posArme[glb.armeStatus[0]][math.floor(glb.armeStatus[4])])
-    glb.process2 = time.time()- debut
+    #glb.process2 = time.time()- debut
     frame = glb.font.render(str(glb.process2), True, (0, 0, 0))
     glb.screen.blit(glb.viseur,glb.posViseur)
     #glb.screen.blit(frame,(10,100)) # affiche l'image des FPS

@@ -20,11 +20,11 @@ millieuX = screenX/2  #millieu X de l'ecran
 print(screenX,screenY)
 reductionEcran = screenX/2560  # valleur qui change les certain paramètre en fonction de la taille de l'écran car tout les paramètre sont pour l'écran de chze moi de 2560
 gameX = 2100  #taille X de la carte
-gameY = 2100  #taille Y de la carte
-playerX = 400 # Position X du joueur
+gameY = 2000  #taille Y de la carte
+playerX = 200 # Position X du joueur
 playerY = 300  # position Y du joueur
 diagonal= int(sqrt(gameX**2+gameY**2)) # diagonal de la carte utile pour le nombre maximum de pixel que peut parcourir le rayon (en pixel)
-carteSize = (21, 21)  # taille X et Y de la carte (en carré)
+carteSize = (21, 20)  # taille X et Y de la carte (en carré)
 diagCarre=int(carteSize[0]*2)  # diagonal de la carte utile pour le nombre maximum de carré que peut parcourir le rayon (en pixel)
 rectSizeX = gameX/carteSize[0]  # taille X d'un carré (en pixel)
 rectSizeY = gameY/carteSize[1]  # taille Y d'un carré (en pixel)
@@ -34,7 +34,7 @@ playerAngle = pi/2  # angle à la quel regarde le joueur
 angleRegard = pi/4  # angle que l'on rajoute et soustrais à l'angle du joueur pour savoir sur quel intervalle d'angle on doit envoyer les rayons
 pi2=pi*2  # 2pi
 pi8 = pi/8
-nbRay =int(screenX/4) # nombre de rayons qu'on envoie
+nbRay =int(screenX/2) # nombre de rayons qu'on envoie
 RectLarg = math.ceil(screenX/nbRay)  # calcul de la largeur d'un rectangle de l'affichage 3d
 listeRay = []  # liste des rayons qui ce met à jour à chaque image et qui est utilisé pour la minimap
 listeRond = []  # liste des point d'intersection utiliser pour la minimap
@@ -59,7 +59,6 @@ Carte = ("111111111111111111111"#0
          "100000000101000000001"#16
          "100000000101000000311"#17
          "100000000121111111101"#18
-         "100000000100000000001"#19
          "111111111111111111111")#20
          #;1;3;5;7;9;1;3;5;7;9;
 nbPorte = Carte.count('2')  # nombre de porte
@@ -67,7 +66,7 @@ nbPortal = Carte.count('3')  # nombre de portail
 
 listeObjet = [[1, 350, 150,0],  [1, 1950, 1850,0],  [5, 550, 350,0]]        # liste emplacement objet sous forme [indice dans la liste des image,posX,posY, frame]
 listeMonstre = [[0, 150, 1350,0 ],  [0, 850, 1350,0 ],
-               [0, 150, 1950,0 ],  [0, 350, 1650,0 ],  [0, 350, 1150,0 ],
+               [0, 150, 1850,0 ],  [0, 350, 1650,0 ],  [0, 350, 1150,0 ],
                [0, 650, 950,0 ],  [0, 1750, 550,0 ],  [0, 1850, 750,0 ],        # liste emplacement monstre sous forme [indice dans la liste des image,posX,posY, frame]
                [0, 1750, 350,0 ],  [0, 1750, 150,0 ],  [0, 1550, 1250,0 ],
                [0, 1650, 1250,0 ],  [0, 1550, 1350,0 ],  [0, 1650, 1350,0 ]]
@@ -82,11 +81,11 @@ for element in Carte:
 
 statutPortal = [False,0]  # status portail de fin sous forme [ouvert, frame]
 sizeMmap=int(screenX/100)  # taille carré minimap
-minimap = sizeMmap*carteSize[0]  # taille minimap en total
+minimap = (sizeMmap*carteSize[0], sizeMmap*carteSize[1])  # taille minimap en total
 darkGrey = (100, 100, 100)
 Grey = (50, 50, 50)
-mapPlayerX = playerX * minimap / gameX  # emplacement X sur la minimap du joueur
-mapPlayerY = playerY * minimap / gameY  # emplacement Y sur la minimap du joueur
+mapPlayerX = playerX * minimap[0] / gameX  # emplacement X sur la minimap du joueur
+mapPlayerY = playerY * minimap[1] / gameY  # emplacement Y sur la minimap du joueur
 vitesse=6  # vitesse joueur
 varVitesse = 1  # multiplicateur de la vitesse
 afficherMap=False  # boolean true si la minimap est affiché
@@ -109,7 +108,7 @@ statusMonstre = []  #status de chaque monstre
 nbMonstreMort = 0   #nombre de monstre mort
 lObjAnim = []  #liste monstre à animé pour sa mort
 for element in listeMonstre:
-    statusMonstre.append([False, False, 0,False,0])  #[visible, animation tir, temps dernier tir, à tirer, attente prochain tir]
+    statusMonstre.append([False, False, 0,False,0, False, [0,0], [0,0]])  #[visible, animation tir, temps dernier tir, à tirer, attente prochain tir, en mouvement, direction(cos,sin), point arriver]
     vieMonstre.append(listeParametreObjet[element[0]][3])  #vie
 objet2d=[]  # liste des objets qu'on voit
 maxlong = 0

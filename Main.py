@@ -18,8 +18,8 @@ import image
 while True:  # boucle infinie jusqu'a qu'on quitte le jeu
     debut = time.time()  # debut du temps pour calculer les fps
     mouvement.zqsd()    # change la position et l'angle de vue du joueur si on appuie sur des touches précise
-    mapplayerX = glb.playerX * glb.minimap / glb.gameX  # calcul de la position X du joueur dans la MiniMap
-    mapplayerY = glb.playerY * glb.minimap / glb.gameY  # calcul de la position Y du joueur dans la MiniMap
+    mapplayerX = glb.playerX * glb.minimap[0] / glb.gameX  # calcul de la position X du joueur dans la MiniMap
+    mapplayerY = glb.playerY * glb.minimap[1] / glb.gameY  # calcul de la position Y du joueur dans la MiniMap
     image.f_all(glb.murBrique)  # création de l'image avec les murs et les objets
     animation.anim()  # fait les animations
     menu.afficher()   # affiche les autres elements de l'image comme la barre de vie ou l'arme du joueur

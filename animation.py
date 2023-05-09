@@ -106,7 +106,7 @@ def anim():
         if glb.vieMonstre[nb]>0 :  # si il est vivant
             if element[0] and not(element[1]):  # si on est visible du monstre et que il est pas entrain de tirer
                 diffTemps = time.time()-element[2]  # calcul le temps depuis le dernier tir
-                if diffTemps>element[4]:  # si il est assez long il tire
+                if diffTemps>element[4] and element[5]==False:  # si il est assez long il tire
                     glb.statusMonstre[nb][1] = True  # en animation de tire
                     glb.statusMonstre[nb][4] = random.randint(2,6)  # aléatoire d'un nouveau temps avant de pouvoir tirer
                     glb.statusMonstre[nb][2] = time.time()  # prend le temps à la quelle il a tiré
@@ -127,7 +127,37 @@ def anim():
                     glb.listeMonstre[nb][3] = 11 # on met la frame à celle où il tire
                 else:
                     glb.listeMonstre[nb][3] += 0.5 # ajoute 0.5 à la frame
+            if element[5] :
+                if time.time()-element[2]>2:
+                    glb.listeMonstre[nb][1] += element[6][0] * 3
+                    glb.listeMonstre[nb][2] += element[6][1] * 3
+                    if abs(glb.listeMonstre[nb][1]-element[7][0])<3 and abs(glb.listeMonstre[nb][2]-element[7][1])<3:
+                        glb.statusMonstre[nb][5] = False
+            else :
+                col = int(glb.listeMonstre[nb][1]/glb.rectSizeX)
+                ligne = int(glb.listeMonstre[nb][2]/glb.rectSizeY)
+                carreBon = True
+                while carreBon :
+                    carreVerif = True
+                    ajoutCol = random.randint(-1, 1)
+                    ajoutligne = random.randint(-1, 1)
+                    nvoCol = col + ajoutCol
+                    nvoLigne = ligne + ajoutligne
+                    nvoCarre = int(nvoLigne* glb.carteSize[0] + nvoCol)
+                    if ajoutligne != 0 and ajoutCol != 0:
+                        carreVerif1 = int(nvoLigne* glb.carteSize[0] + col)
+                        carreVerif2 = int(ligne * glb.carteSize[0] + nvoCol)
+                        if glb.Carte[carreVerif1] == "1" or glb.Carte[carreVerif1] == "2" or glb.Carte[carreVerif2] != "1" or glb.Carte[carreVerif2] != "2":
+                            carreVerif = False
+                    if glb.Carte[nvoCarre] != "1" and glb.Carte[nvoCarre] != "2" and carreVerif:
+                        carreBon = False
+                pointAriver = (nvoCol * glb.rectSizeX + glb.rectSizeX/2, nvoLigne * glb.rectSizeY + glb.rectSizeX/2)
+                angle = objet.calculAngleObj(glb.listeMonstre[nb][1]-pointAriver[0], glb.listeMonstre[nb][2]-pointAriver[1])
+                glb.statusMonstre[nb][7] = pointAriver
+                glb.statusMonstre[nb][5] = True
+                glb.statusMonstre[nb][6] = (math.cos(angle), math.sin(angle))
         nb += 1
+
 
     if glb.nbMonstreMort == len(glb.listeMonstre):  # si on a tué tout les monstres
         glb.statutPortal[0] = True # alors le portail est actif

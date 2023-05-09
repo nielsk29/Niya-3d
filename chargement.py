@@ -56,8 +56,8 @@ def restart():
                 [0, False, False, False])  # [ajout position, si on peut passer, en animation, entrain d'être fermé]
         else:
             glb.statusPorte.append([0, True, False, False])
-    glb.mapPlayerX = glb.playerX * glb.minimap / glb.gameX  # emplacement X sur la minimap du joueur
-    glb.mapPlayerY = glb.playerY * glb.minimap / glb.gameY  # emplacement Y sur la minimap du joueur
+    glb.mapPlayerX = glb.playerX * glb.minimap[0] / glb.gameX  # emplacement X sur la minimap du joueur
+    glb.mapPlayerY = glb.playerY * glb.minimap[1] / glb.gameY  # emplacement Y sur la minimap du joueur
     glb.varVitesse = 1
     glb.afficherMap = False  # boolean true si la minimap est affiché
     glb.process = 1  # temps fps
@@ -76,8 +76,7 @@ def restart():
     glb.statusMonstre = []
     glb.lObjAnim = []
     for element in glb.listeMonstre:
-        glb.statusMonstre.append(
-            [False, False, 0, False, 0])  # [visible, animation tir, temps dernier tir, à tirer, attente prochain tir]
+        glb.statusMonstre.append([False, False, 0, False, 0, False, [0, 0], [0,0]])  # [visible, animation tir, temps dernier tir, à tirer, attente prochain tir, en mouvement, direction(cos,sin), point arriver]
         glb.vieMonstre.append(glb.listeParametreObjet[element[0]][3])
     glb.objet2d = []  # liste des objets qu'on voit
     glb.maxlong = 0
